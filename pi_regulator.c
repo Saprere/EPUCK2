@@ -10,13 +10,17 @@
 #include <pi_regulator.h>
 #include <process_image.h>
 
+//define for the cm convertor
+#define CM = 10^-1
+
+
 //simple PI regulator implementation
-int16_t pi_regulator(float distance, float goal){
+int16_t pi_regulator(uint16_t distance, uint16_t goal){
 
-	float error = 0;
-	float speed = 0;
+	uint16_t  error = 0;
+	uint16_t  speed = 0;
 
-	static float sum_error = 0;
+	static uint16_t sum_error = 0;
 
 	error = distance - goal;
 
@@ -56,10 +60,10 @@ static THD_FUNCTION(PiRegulator, arg) {
         time = chVTGetSystemTime();
         
         //computes the speed to give to the motors
-        //distance_cm is modified by the image processing thread
-        speed = pi_regulator(get_distance_cm(), GOAL_DISTANCE);
+        //get_dist_mm is modified by the TOF thread
+        speed = pi_regulator(VL53L0X_get_dist_mm()*CM, GOAL_DISTANCE);
         //computes a correction factor to let the robot rotate to be in front of the line
-        speed_correction = (get_line_position() - (IMAGE_BUFFER_SIZE/2));
+        speed_correction = (get_angle() - (IMAGE_BUFFER_SIZE/2)); // TRIANGULATION POUR LA CORRECTION
 
         //if the line is nearly in front of the camera, don't rotate
         if(abs(speed_correction) < ROTATION_THRESHOLD){
