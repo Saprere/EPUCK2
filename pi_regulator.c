@@ -8,7 +8,8 @@
 #include <main.h>
 #include <motors.h>
 #include <pi_regulator.h>
-#include <process_image.h>
+#include <sensors/VL53L0X/VL53L0X.h>
+#include <TRIANGULATION>
 
 //define for the cm convertor
 #define CM = 10^-1
