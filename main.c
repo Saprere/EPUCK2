@@ -16,12 +16,20 @@
 #include <communications.h>
 #include <arm_math.h>
 
+#include <pi_regulator.h>
+
 //uncomment to send the FFTs results from the real microphones
 #define SEND_FROM_MIC
 
 //uncomment to use double buffering to send the FFT to the computer
-//#define DOUBLE_BUFFERING
+#define DOUBLE_BUFFERING
 
+void SendUint8ToComputer(uint8_t* data, uint16_t size) 
+{
+    chSequentialStreamWrite((BaseSequentialStream *)&SD3, (uint8_t*)"START", 5);
+    chSequentialStreamWrite((BaseSequentialStream *)&SD3, (uint8_t*)&size, sizeof(uint16_t));
+    chSequentialStreamWrite((BaseSequentialStream *)&SD3, (uint8_t*)data, size);
+}
 
 static void serial_start(void)
 {
@@ -67,6 +75,9 @@ int main(void)
     //inits the motors
     motors_init();
 
+    //stars the threads for the pi regulator and the processing of the image
+    pi_regulator_start();
+    process_image_start();
 
     //send_tab is used to save the state of the buffer to send (double buffering)
     //to avoid modifications of the buffer while sending it
