@@ -3,13 +3,19 @@
 #include <main.h>
 #include <usbcfg.h>
 #include <chprintf.h>
+#include <stdlib.h> ////////// DANS LE CAS OU RAJOUTE RAND
 
 #include <motors.h>
+#include <gpio.h>
+#include <timer.h>
 #include <audio/microphone.h>
 #include <audio_processing.h>
 #include <communications.h>
 #include <fft.h>
 #include <arm_math.h>
+
+#include <pi_regulator.h>
+#include <VL53L0X.h>
 
 //semaphore
 static BSEMAPHORE_DECL(sendToComputer_sem, TRUE);
@@ -32,6 +38,9 @@ static float micBack_output[FFT_SIZE];
 #define FREQ_LEFT		19	//296Hz
 #define FREQ_RIGHT		23	//359HZ
 #define FREQ_BACKWARD	26	//406Hz
+#define FREQ_PREY		25	//frequence at witch the robot hunts
+#define FREQ_PLAY		35	//fréquence at wich the robot plays
+#define FREQ_PANIC		40	//frequence at wich the robot panics
 #define MAX_FREQ		30	//we don't analyze after this index to not use resources for nothing
 
 #define FREQ_FORWARD_L		(FREQ_FORWARD-1)
@@ -42,6 +51,14 @@ static float micBack_output[FFT_SIZE];
 #define FREQ_RIGHT_H		(FREQ_RIGHT+1)
 #define FREQ_BACKWARD_L		(FREQ_BACKWARD-1)
 #define FREQ_BACKWARD_H		(FREQ_BACKWARD+1)
+#define FREQ_PREY_L			(FREQ_PREY-1)
+#define FREQ_PREY_H			(FREQ_PREY+1)
+#define FREQ_PLAY_L			(FREQ_PLAY-1)
+#define FREQ_PLAY_L			(FREQ_PLAY+1)
+#define FREQ_PANIC_L		(FREQ_PANIC-1)
+#define FREQ_PANIC_L		(FREQ_PANIC+1)
+
+#define DIST_PREY			50
 
 /*
 *	Simple function used to detect the highest value in a buffer
@@ -79,6 +96,55 @@ void sound_remote(float* data){
 		left_motor_set_speed(-600);
 		right_motor_set_speed(-600);
 	}
+	else{
+		left_motor_set_speed(0);
+		right_motor_set_speed(0);
+	}
+	
+}
+
+void sound_animal((float* data){
+	float max_norm = MIN_VALUE_THRESHOLD;
+	int16_t max_norm_index = -1; 
+
+	//search for the highest peak
+	for(uint16_t i = MIN_FREQ ; i <= MAX_FREQ ; i++){
+		if(data[i] > max_norm){
+			max_norm = data[i];
+			max_norm_index = i;
+		}
+	}
+
+	distance_TOF = get_distance_mm();
+
+	//The robot moves towards the prey 
+	if(max_norm_index >= FREQ_PREY_L && max_norm_index <= FREQ_PREY_H){
+		if(distance_TOF >= DIST_PREY)
+			left_motor_set_speed(600);
+			right_motor_set_speed(600);
+			
+			delay(SystemCoreClock/16);
+			gpio_toggle(BODY_LED);
+		
+		else
+			left_motor_set_speed(MOTOR_SPEED_LIMIT);
+			right_motor_set_speed(MOTOR_SPEED_LIMIT);
+
+			delay(SystemCoreClock/16);
+			gpio_toggle(BODY_LED);
+	}
+	//The robot starts playing
+	else if(max_norm_index >= FREQ_PLAY_L && max_norm_index <= FREQ_PLAY_H){
+		left_motor_set_speed(-600);
+		right_motor_set_speed(600);
+	}
+	//The robot panics
+	else if(max_norm_index >= FREQ_PANIC_L && max_norm_index <= FREQ_PANIC_H){
+
+		left_motor_set_speed(600);
+		//right_motor_set_speed(-600);
+	}
+
 	else{
 		left_motor_set_speed(0);
 		right_motor_set_speed(0);
