@@ -9,19 +9,19 @@
 #include <motors.h>
 #include <pi_regulator.h>
 #include <sensors/VL53L0X/VL53L0X.h>
-#include <TRIANGULATION>
+#include <TRIANGULATION> /////////////////////////////////////
 
 //define for the cm convertor
 #define CM = 10^-1
 
 
 //simple PI regulator implementation
-int16_t pi_regulator(uint16_t distance, uint16_t goal){
+int16_t pi_regulator(float distance, float goal){
 
-	uint16_t  error = 0;
-	uint16_t  speed = 0;
+	float  error = 0;
+	float  speed = 0;
 
-	static uint16_t sum_error = 0;
+	static float sum_error = 0;
 
 	error = distance - goal;
 
@@ -62,8 +62,8 @@ static THD_FUNCTION(PiRegulator, arg) {
         
         //computes the speed to give to the motors
         //get_dist_mm is modified by the TOF thread
-        speed = pi_regulator(VL53L0X_get_dist_mm()*CM, GOAL_DISTANCE);
-        //computes a correction factor to let the robot rotate to be in front of the line
+        speed = pi_regulator((float)VL53L0X_get_dist_mm()*CM, GOAL_DISTANCE);
+        //computes a correction factor to let the robot rotate to be aligned with the sound source
         speed_correction = (get_angle() - (IMAGE_BUFFER_SIZE/2)); // TRIANGULATION POUR LA CORRECTION
 
         //if the line is nearly in front of the camera, don't rotate
