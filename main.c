@@ -67,6 +67,8 @@ int main(void)
     //inits the motors
     motors_init();
 
+    audio_init();
+
 
     //send_tab is used to save the state of the buffer to send (double buffering)
     //to avoid modifications of the buffer while sending it

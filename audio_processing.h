@@ -19,10 +19,17 @@ typedef enum {
 	FRONT_OUTPUT,
 	BACK_OUTPUT
 } BUFFER_NAME_t;
-void angle_calculus();
 
-bool frequency_calcul(float* data1,float* data2);
+//calculates the angle from the phase of the FFT
+void angle_calculator();
 
+//return the current angle of the sound direction
+double get_angle();
+
+//verifies the imput signal has the right frequency of both microphone
+bool frequency_check(float* data1,float* data2);
+
+//gets the signal, does FFT, calculate the amplitude of FFT, calls the other functions
 void processAudioData(int16_t *data, uint16_t num_samples);
 
 /*
