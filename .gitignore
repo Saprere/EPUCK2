@@ -2,3 +2,7 @@
 lib/
 
 .DS_Store
+
+.dep/
+
+build/
