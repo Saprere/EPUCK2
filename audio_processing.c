@@ -14,7 +14,7 @@
 #include <math.h>
 
 #include <pi_regulator.h>
-#include <VL53L0X.h>
+#include <sensors/VL53L0X/VL53L0X.h>
 
 //semaphore
 static BSEMAPHORE_DECL(sendToComputer_sem, TRUE);
