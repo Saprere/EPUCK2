@@ -57,11 +57,12 @@ static float angle_sonore;
 #define FREQ_PREY_L			(FREQ_PREY-1)
 #define FREQ_PREY_H			(FREQ_PREY+1)
 #define FREQ_PLAY_L			(FREQ_PLAY-1)
-#define FREQ_PLAY_L			(FREQ_PLAY+1)
+#define FREQ_PLAY_H			(FREQ_PLAY+1)
 #define FREQ_PANIC_L		(FREQ_PANIC-1)
-#define FREQ_PANIC_L		(FREQ_PANIC+1)
+#define FREQ_PANIC_H		(FREQ_PANIC+1)
 
 #define DIST_PREY			50
+#define SIGNAL_FREQ //DEFINIR AL FREQUENCE OU CREER UNE VARIABLE POUR LA FONCTION animal
 /*
 *	Callback called when the demodulation of the four microphones is done.
 *	We get 160 samples per mic every 10ms (16kHz)
@@ -120,19 +121,19 @@ bool frequency_calcul(float* data1,float* data2){
 		}
 	}
 
-	if(max_norm1 > MIN_VALUE_THRESHOLD && max_norm_index1 == SIGNAL_FREQ){
-		if(max_norm2 > MIN_VALUE_THRESHOLD && max_norm_index2 == SIGNAL_FREQ){
-			return 1;
-		}else{
-			return 0;
-		}
-	}else{
-		return 0;
-	}
+//	if(max_norm1 > MIN_VALUE_THRESHOLD && max_norm_index1 == SIGNAL_FREQ){
+//		if(max_norm2 > MIN_VALUE_THRESHOLD && max_norm_index2 == SIGNAL_FREQ){
+//			return 1;
+//		}else{
+//			return 0;
+//		}
+//	}else{
+//		return 0;
+//	}
 }
 
 
-void sound_animal((float* data){
+void sound_animal(float* data){
 	float max_norm = MIN_VALUE_THRESHOLD;
 	int16_t max_norm_index = -1; 
 
@@ -144,23 +145,22 @@ void sound_animal((float* data){
 		}
 	}
 
-	distance_TOF = get_distance_mm();
+	uint16_t distance_TOF = VL53L0X_get_dist_mm();
 
 	//The robot moves towards the prey 
 	if(max_norm_index >= FREQ_PREY_L && max_norm_index <= FREQ_PREY_H){
-		if(distance_TOF >= DIST_PREY)
+		if(distance_TOF >= DIST_PREY){
 			left_motor_set_speed(600);
 			right_motor_set_speed(600);
 			
-			delay(SystemCoreClock/16);
 			gpio_toggle(BODY_LED);
-		
-		else
+		}
+		else{
 			left_motor_set_speed(MOTOR_SPEED_LIMIT);
 			right_motor_set_speed(MOTOR_SPEED_LIMIT);
 
-			delay(SystemCoreClock/16);
 			gpio_toggle(BODY_LED);
+		}
 	}
 	//The robot starts playing
 	else if(max_norm_index >= FREQ_PLAY_L && max_norm_index <= FREQ_PLAY_H){
@@ -189,10 +189,10 @@ void angle_calculus(){
 	 double phase_left = 1 ;
 
 	// PROBLEME ICI!
-		phase_right = atan2(micRight_cmplx_input[SIGNAL_FREQ*2 + 1],micRight_cmplx_input[SIGNAL_FREQ*2]);
-
-
-		phase_left = atan2(micLeft_cmplx_input[SIGNAL_FREQ*2 + 1], micLeft_cmplx_input[SIGNAL_FREQ*2]);
+//		phase_right = atan2(micRight_cmplx_input[SIGNAL_FREQ*2 + 1],micRight_cmplx_input[SIGNAL_FREQ*2]);
+//
+//
+//		phase_left = atan2(micLeft_cmplx_input[SIGNAL_FREQ*2 + 1], micLeft_cmplx_input[SIGNAL_FREQ*2]);
 
 
 angle_sonore = phase_left-phase_right;
