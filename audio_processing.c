@@ -74,6 +74,8 @@ static float angle_sonore;
 *	uint16_t num_samples	Tells how many data we get in total (should always be 640)
 */
 
+
+//YOU KAN KILL
 void sound_animal(float* data){
 	float max_norm = MIN_VALUE_THRESHOLD;
 	int16_t max_norm_index = -1; 
