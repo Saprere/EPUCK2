@@ -59,8 +59,29 @@ static void timer12_start(void){
     gptStartContinuous(&GPTD12, 0xFFFF);
 }
 
+
+//static void LEDs_update(const uint8_t *out)
+//{
+//    /* LEDs */
+//    out[3] ? gpio_clear(LED1) : gpio_set(LED1);
+//    out[2] ? gpio_clear(LED3) : gpio_set(LED3);
+//    out[1] ? gpio_clear(LED5) : gpio_set(LED5);
+//    out[0] ? gpio_clear(LED7) : gpio_set(LED7);
+//}
+
 int main(void)
 {
+
+//    // BODY_LED init
+//    gpio_set(BODY_LED);
+//    gpio_config_output_pushpull(BODY_LED);
+//
+//    // LEDs defined in main.h
+//    gpio_config_output_opendrain(LED1);
+//    gpio_config_output_opendrain(LED3);
+//    gpio_config_output_opendrain(LED5);
+//    gpio_config_output_opendrain(LED7);
+
 
     halInit();
     chSysInit();
@@ -77,7 +98,6 @@ int main(void)
 
     //stars the threads for the pi regulator and the processing of the image
     pi_regulator_start();
-    process_image_start();
 
     //send_tab is used to save the state of the buffer to send (double buffering)
     //to avoid modifications of the buffer while sending it

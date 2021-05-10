@@ -5,9 +5,9 @@
 extern "C" {
 #endif
 
-#include "camera/dcmi_camera.h"
 #include "msgbus/messagebus.h"
 #include "parameter/parameter.h"
+
 
 /* LEDs that can be used in EPUCK2
   LED1 			: GPIOD pin 5
@@ -18,12 +18,12 @@ extern "C" {
 WARNING : Not on the same port !!
   BODY_LED		: GPIOB pin 2
 */
-#define LED1     	GPIOD, 5
-#define LED3     	GPIOD, 6
-#define LED5     	GPIOD, 10
-#define LED7     	GPIOD, 11
-#define FRONT_LED	GPIOD, 14
-#define BODY_LED	GPIOB, 2
+//#define LED1     	GPIOD, 5
+//#define LED3     	GPIOD, 6
+//#define LED5     	GPIOD, 10
+//#define LED7     	GPIOD, 11
+//#define FRONT_LED	GPIOD, 14
+//#define BODY_LED	GPIOB, 2
 
 //constants for the differents parts of the project
 #define ROTATION_THRESHOLD		10

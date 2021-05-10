@@ -5,7 +5,6 @@
 #include <chprintf.h>
 
 #include <motors.h>
-#include <gpio.h>
 #include <audio/microphone.h>
 #include <audio_processing.h>
 #include <communications.h>
@@ -92,10 +91,10 @@ void sound_remote(){
 		led3 = 1;
 	}
 
-	palWritePad(GPIOD, GPIOD_LED1, led1 ? 0 : 1);
-	palWritePad(GPIOD, GPIOD_LED3, led3 ? 0 : 1);
-	palWritePad(GPIOD, GPIOD_LED5, led5 ? 0 : 1);
-	palWritePad(GPIOD, GPIOD_LED7, led7 ? 0 : 1);
+//	palWritePad(GPIOD, GPIOD_LED1, led1 ? 0 : 1);
+//	palWritePad(GPIOD, GPIOD_LED3, led3 ? 0 : 1);
+//	palWritePad(GPIOD, GPIOD_LED5, led5 ? 0 : 1);
+//	palWritePad(GPIOD, GPIOD_LED7, led7 ? 0 : 1);
 
 }
 
@@ -153,13 +152,11 @@ void sound_animal(float* data){
 			left_motor_set_speed(600);
 			right_motor_set_speed(600);
 			
-			gpio_toggle(BODY_LED);
 		}
 		else{
 			left_motor_set_speed(MOTOR_SPEED_LIMIT);
 			right_motor_set_speed(MOTOR_SPEED_LIMIT);
 
-			gpio_toggle(BODY_LED);
 		}
 	}
 	//The robot starts playing
