@@ -41,7 +41,7 @@ static float angle_sonore;
 // #define FREQ_RIGHT		23	//359HZ
 // #define FREQ_BACKWARD	26	//406Hz
 #define FREQ_PREY		16	//frequence at witch the robot hunts
-#define FREQ_PLAY		19	//fréquence at wich the robot plays
+#define FREQ_PLAY		19	//frï¿½quence at wich the robot plays
 #define FREQ_PANIC		23	//frequence at wich the robot panics
 #define MAX_FREQ		30	//we don't analyze after this index to not use resources for nothing
 
@@ -76,7 +76,7 @@ static float angle_sonore;
 
 
 //YOU KAN KILL
-void sound_animal(float* data){
+int16_t sound_animal(float* data){
 	float max_norm = MIN_VALUE_THRESHOLD;
 	int16_t max_norm_index = -1; 
 
@@ -264,7 +264,7 @@ void processAudioData(int16_t *data, uint16_t num_samples){
 		doFFT_optimized(FFT_SIZE, micRight_cmplx_input);
 		doFFT_optimized(FFT_SIZE, micLeft_cmplx_input);
 
-		// avant et arrière à enlever
+		// avant et arriï¿½re ï¿½ enlever
 		//doFFT_optimized(FFT_SIZE, micFront_cmplx_input);
 		//doFFT_optimized(FFT_SIZE, micBack_cmplx_input);
 
@@ -278,7 +278,7 @@ void processAudioData(int16_t *data, uint16_t num_samples){
 		arm_cmplx_mag_f32(micRight_cmplx_input, micRight_output, FFT_SIZE);
 		arm_cmplx_mag_f32(micLeft_cmplx_input, micLeft_output, FFT_SIZE);
 
-		// avant et arrière à enlever
+		// avant et arriï¿½re ï¿½ enlever
 		//arm_cmplx_mag_f32(micFront_cmplx_input, micFront_output, FFT_SIZE);
 		//arm_cmplx_mag_f32(micBack_cmplx_input, micBack_output, FFT_SIZE);
 
@@ -290,8 +290,8 @@ void processAudioData(int16_t *data, uint16_t num_samples){
 		int16_t f_left = 0;
 		int16_t f_right = 0;
 
-			//vérifier la fonction --> elle ne renvoie pas la frequence pour l'insta
-		// problème avec valid angle
+			//vï¿½rifier la fonction --> elle ne renvoie pas la frequence pour l'insta
+		// problï¿½me avec valid angle
 
 		bool f_valid = frequency_calcul(micLeft_output,micRight_output);
 

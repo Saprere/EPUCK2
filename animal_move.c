@@ -37,7 +37,7 @@ static float angle_sonore;
 
 #define MIN_FREQ		10	//we don't analyze before this index to not use resources for nothing
 #define FREQ_PREY		25	//frequence at witch the robot hunts
-#define FREQ_PLAY		35	//fréquence at wich the robot plays
+#define FREQ_PLAY		35	//frï¿½quence at wich the robot plays
 #define FREQ_PANIC		40	//frequence at wich the robot panics
 #define MAX_FREQ		30	//we don't analyze after this index to not use resources for nothing
 
@@ -95,7 +95,10 @@ static THD_FUNCTION(Animal, arg) {
         if(abs(speed_correction) < ROTATION_THRESHOLD){
         	speed_correction = 0;
         }
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        left_motor_set_speed(MOTOR_SPEED_LIMIT);
+        right_motor_set_speed(MOTOR_SPEED_LIMIT);
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//The robot moves towards the prey 
 		if(max_norm_index >= FREQ_PREY_L && max_norm_index <= FREQ_PREY_H){
 			if(distance_TOF >= DIST_PREY){

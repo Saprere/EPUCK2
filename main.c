@@ -87,7 +87,8 @@ int main(void)
     motors_init();
 
     //stars the threads for the animal move regulator
-    animal_start();
+    //animal_start();
+    pi_regulator_start();
 
     //audio_init(); ??????????????????????
 
