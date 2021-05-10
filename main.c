@@ -2,21 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "ch.h"
-#include "hal.h"
-#include "memory_protection.h"
+#include <ch.h>
+#include <hal.h>
+#include <chprintf.h>
+#include <memory_protection.h>
 #include <usbcfg.h>
 #include <main.h>
-#include <chprintf.h>
 #include <motors.h>
 #include <audio/microphone.h>
 
 #include <audio_processing.h>
+#include <pi_regulator.h>
+#include <animal_move.h>
 #include <fft.h>
 #include <communications.h>
 #include <arm_math.h>
-
-#include <pi_regulator.h>
 
 //uncomment to send the FFTs results from the real microphones
 #define SEND_FROM_MIC
@@ -72,17 +72,7 @@ static void timer12_start(void){
 int main(void)
 {
 
-//    // BODY_LED init
-//    gpio_set(BODY_LED);
-//    gpio_config_output_pushpull(BODY_LED);
-//
-//    // LEDs defined in main.h
-//    gpio_config_output_opendrain(LED1);
-//    gpio_config_output_opendrain(LED3);
-//    gpio_config_output_opendrain(LED5);
-//    gpio_config_output_opendrain(LED7);
-
-
+   /* System init */
     halInit();
     chSysInit();
     mpu_init();
@@ -96,8 +86,10 @@ int main(void)
     //inits the motors
     motors_init();
 
-    //stars the threads for the pi regulator and the processing of the image
-    pi_regulator_start();
+    //stars the threads for the animal move regulator
+    animal_start();
+
+    //audio_init(); ??????????????????????
 
     //send_tab is used to save the state of the buffer to send (double buffering)
     //to avoid modifications of the buffer while sending it

@@ -4,7 +4,6 @@
 #include <usbcfg.h>
 #include <chprintf.h>
 
-
 #include <main.h>
 #include <motors.h>
 #include <pi_regulator.h>

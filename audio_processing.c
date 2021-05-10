@@ -36,23 +36,23 @@ static float angle_sonore;
 #define MIN_VALUE_THRESHOLD	10000 
 
 #define MIN_FREQ		10	//we don't analyze before this index to not use resources for nothing
-#define FREQ_FORWARD	16	//250Hz
-#define FREQ_LEFT		19	//296Hz
-#define FREQ_RIGHT		23	//359HZ
-#define FREQ_BACKWARD	26	//406Hz
-#define FREQ_PREY		25	//frequence at witch the robot hunts
-#define FREQ_PLAY		35	//frÃ©quence at wich the robot plays
-#define FREQ_PANIC		40	//frequence at wich the robot panics
+// #define FREQ_FORWARD	16	//250Hz
+// #define FREQ_LEFT		19	//296Hz
+// #define FREQ_RIGHT		23	//359HZ
+// #define FREQ_BACKWARD	26	//406Hz
+#define FREQ_PREY		16	//frequence at witch the robot hunts
+#define FREQ_PLAY		19	//fréquence at wich the robot plays
+#define FREQ_PANIC		23	//frequence at wich the robot panics
 #define MAX_FREQ		30	//we don't analyze after this index to not use resources for nothing
 
-#define FREQ_FORWARD_L		(FREQ_FORWARD-1)
-#define FREQ_FORWARD_H		(FREQ_FORWARD+1)
-#define FREQ_LEFT_L			(FREQ_LEFT-1)
-#define FREQ_LEFT_H			(FREQ_LEFT+1)
-#define FREQ_RIGHT_L		(FREQ_RIGHT-1)
-#define FREQ_RIGHT_H		(FREQ_RIGHT+1)
-#define FREQ_BACKWARD_L		(FREQ_BACKWARD-1)
-#define FREQ_BACKWARD_H		(FREQ_BACKWARD+1)
+// #define FREQ_FORWARD_L		(FREQ_FORWARD-1)
+// #define FREQ_FORWARD_H		(FREQ_FORWARD+1)
+// #define FREQ_LEFT_L			(FREQ_LEFT-1)
+// #define FREQ_LEFT_H			(FREQ_LEFT+1)
+// #define FREQ_RIGHT_L		(FREQ_RIGHT-1)
+// #define FREQ_RIGHT_H		(FREQ_RIGHT+1)
+// #define FREQ_BACKWARD_L		(FREQ_BACKWARD-1)
+// #define FREQ_BACKWARD_H		(FREQ_BACKWARD+1)
 #define FREQ_PREY_L			(FREQ_PREY-1)
 #define FREQ_PREY_H			(FREQ_PREY+1)
 #define FREQ_PLAY_L			(FREQ_PLAY-1)
@@ -61,7 +61,9 @@ static float angle_sonore;
 #define FREQ_PANIC_H		(FREQ_PANIC+1)
 
 #define DIST_PREY			50
-#define SIGNAL_FREQ //DEFINIR AL FREQUENCE OU CREER UNE VARIABLE POUR LA FONCTION animal
+// #define SIGNAL_FREQ //DEFINIR AL FREQUENCE OU CREER UNE VARIABLE POUR LA FONCTION animal
+
+
 /*
 *	Callback called when the demodulation of the four microphones is done.
 *	We get 160 samples per mic every 10ms (16kHz)
@@ -71,6 +73,67 @@ static float angle_sonore;
 *							so we have [micRight1, micLeft1, micBack1, micFront1, micRight2, etc...]
 *	uint16_t num_samples	Tells how many data we get in total (should always be 640)
 */
+
+void sound_animal(float* data){
+	float max_norm = MIN_VALUE_THRESHOLD;
+	int16_t max_norm_index = -1; 
+
+	//search for the highest peak
+	for(uint16_t i = MIN_FREQ ; i <= MAX_FREQ ; i++){
+		if(data[i] > max_norm){
+			max_norm = data[i];
+			max_norm_index = i;
+		}
+	}
+
+	return(max_norm_index);	
+}
+
+// void sound_animal(float* data){
+// 	float max_norm = MIN_VALUE_THRESHOLD;
+// 	int16_t max_norm_index = -1; 
+
+// 	//search for the highest peak
+// 	for(uint16_t i = MIN_FREQ ; i <= MAX_FREQ ; i++){
+// 		if(data[i] > max_norm){
+// 			max_norm = data[i];
+// 			max_norm_index = i;
+// 		}
+// 	}
+
+// 	uint16_t distance_TOF = VL53L0X_get_dist_mm();
+
+// 	//The robot moves towards the prey 
+// 	if(max_norm_index >= FREQ_PREY_L && max_norm_index <= FREQ_PREY_H){
+// 		if(distance_TOF >= DIST_PREY){
+// 			left_motor_set_speed(600);
+// 			right_motor_set_speed(600);
+			
+// 		}
+// 		else{
+// 			left_motor_set_speed(MOTOR_SPEED_LIMIT);
+// 			right_motor_set_speed(MOTOR_SPEED_LIMIT);
+
+// 		}
+// 	}
+// 	//The robot starts playing
+// 	else if(max_norm_index >= FREQ_PLAY_L && max_norm_index <= FREQ_PLAY_H){
+// 		left_motor_set_speed(-600);
+// 		right_motor_set_speed(600);
+// 	}
+// 	//The robot panics
+// 	else if(max_norm_index >= FREQ_PANIC_L && max_norm_index <= FREQ_PANIC_H){
+
+// 		left_motor_set_speed(600);
+// 		//right_motor_set_speed(-600);
+// 	}
+
+// 	else{
+// 		left_motor_set_speed(0);
+// 		right_motor_set_speed(0);
+// 	}
+	
+// }
 
 
 void sound_remote(){
@@ -129,53 +192,6 @@ bool frequency_calcul(float* data1,float* data2){
 //	}else{
 //		return 0;
 //	}
-}
-
-
-void sound_animal(float* data){
-	float max_norm = MIN_VALUE_THRESHOLD;
-	int16_t max_norm_index = -1; 
-
-	//search for the highest peak
-	for(uint16_t i = MIN_FREQ ; i <= MAX_FREQ ; i++){
-		if(data[i] > max_norm){
-			max_norm = data[i];
-			max_norm_index = i;
-		}
-	}
-
-	uint16_t distance_TOF = VL53L0X_get_dist_mm();
-
-	//The robot moves towards the prey 
-	if(max_norm_index >= FREQ_PREY_L && max_norm_index <= FREQ_PREY_H){
-		if(distance_TOF >= DIST_PREY){
-			left_motor_set_speed(600);
-			right_motor_set_speed(600);
-			
-		}
-		else{
-			left_motor_set_speed(MOTOR_SPEED_LIMIT);
-			right_motor_set_speed(MOTOR_SPEED_LIMIT);
-
-		}
-	}
-	//The robot starts playing
-	else if(max_norm_index >= FREQ_PLAY_L && max_norm_index <= FREQ_PLAY_H){
-		left_motor_set_speed(-600);
-		right_motor_set_speed(600);
-	}
-	//The robot panics
-	else if(max_norm_index >= FREQ_PANIC_L && max_norm_index <= FREQ_PANIC_H){
-
-		left_motor_set_speed(600);
-		//right_motor_set_speed(-600);
-	}
-
-	else{
-		left_motor_set_speed(0);
-		right_motor_set_speed(0);
-	}
-	
 }
 
 
@@ -246,7 +262,7 @@ void processAudioData(int16_t *data, uint16_t num_samples){
 		doFFT_optimized(FFT_SIZE, micRight_cmplx_input);
 		doFFT_optimized(FFT_SIZE, micLeft_cmplx_input);
 
-		// avant et arriÃ¨re Ã  enlever
+		// avant et arrière à enlever
 		//doFFT_optimized(FFT_SIZE, micFront_cmplx_input);
 		//doFFT_optimized(FFT_SIZE, micBack_cmplx_input);
 
@@ -260,7 +276,7 @@ void processAudioData(int16_t *data, uint16_t num_samples){
 		arm_cmplx_mag_f32(micRight_cmplx_input, micRight_output, FFT_SIZE);
 		arm_cmplx_mag_f32(micLeft_cmplx_input, micLeft_output, FFT_SIZE);
 
-		// avant et arriÃ¨re Ã  enlever
+		// avant et arrière à enlever
 		//arm_cmplx_mag_f32(micFront_cmplx_input, micFront_output, FFT_SIZE);
 		//arm_cmplx_mag_f32(micBack_cmplx_input, micBack_output, FFT_SIZE);
 
@@ -272,8 +288,8 @@ void processAudioData(int16_t *data, uint16_t num_samples){
 		int16_t f_left = 0;
 		int16_t f_right = 0;
 
-			//vÃ©rifier la fonction --> elle ne renvoie pas la frequence pour l'insta
-		// problÃ¨me avec valid angle
+			//vérifier la fonction --> elle ne renvoie pas la frequence pour l'insta
+		// problème avec valid angle
 
 		bool f_valid = frequency_calcul(micLeft_output,micRight_output);
 
