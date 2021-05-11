@@ -78,18 +78,20 @@ static THD_FUNCTION(Animal, arg) {
 
 		//The robot moves towards the prey
 		// if(max_norm_index >= FREQ_PREY_L && max_norm_index <= FREQ_PREY_H){
-			if(distance_TOF >= DIST_PREY){
+			// if(distance_TOF >= DIST_PREY){
+        		if(distance_TOF == 0){
 				left_motor_set_speed(MOTOR_SPEED_LIMIT);
         		right_motor_set_speed(MOTOR_SPEED_LIMIT);
 				// left_motor_set_speed(MOTOR_SPEED_CRUISE - ROTATION_COEFF * speed_correction); 
 				// right_motor_set_speed(MOTOR_SPEED_CRUISE + ROTATION_COEFF * speed_correction);
-			}
+				}
+				
 			// else{
 			// 	left_motor_set_speed(MOTOR_SPEED_LIMIT);
 			// 	right_motor_set_speed(MOTOR_SPEED_LIMIT);
 			// }
 		// }
-		//The robot starts playing
+		// //The robot starts playing
 		// else if(max_norm_index >= FREQ_PLAY_L && max_norm_index <= FREQ_PLAY_H){
 		// 	// right_motor_set_speed(speed - ROTATION_COEFF * speed_correction);
 		// 	// left_motor_set_speed(speed + ROTATION_COEFF * speed_correction);
