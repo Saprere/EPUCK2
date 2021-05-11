@@ -20,11 +20,14 @@ typedef enum {
 	BACK_OUTPUT
 } BUFFER_NAME_t;
 
+//calculates de index of the frequency
+int16_t sound_animal(float* data);
+
 //calculates the angle from the phase of the FFT
-void angle_calculator();
+void angle_calculator(void);
 
 //return the current angle of the sound direction
-double get_angle();
+double get_angle(void);
 
 //verifies the imput signal has the right frequency of both microphone
 bool frequency_check(float* data1,float* data2);
@@ -38,7 +41,7 @@ void processAudioData(int16_t *data, uint16_t num_samples);
 void wait_send_to_computer(void);
 
 
-void sound_remote();
+void sound_remote(void);
 
 /*
 *	Returns the pointer to the BUFFER_NAME_t buffer asked

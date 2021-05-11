@@ -68,9 +68,9 @@ static THD_FUNCTION(PiRegulator, arg) {
         if(abs(speed_correction) < ROTATION_THRESHOLD){
         	speed_correction = 0;
         }
-        /////////////////////////////////////////////////////////////////////
-        left_motor_set_speed(MOTOR_SPEED_LIMIT);
-        right_motor_set_speed(MOTOR_SPEED_LIMIT);
+/////////////////////////////////////////////////////////////////////
+        //left_motor_set_speed(MOTOR_SPEED_LIMIT);
+        //right_motor_set_speed(MOTOR_SPEED_LIMIT);
         //applies the speed from the PI regulator and the correction for the rotation
 		right_motor_set_speed(speed - ROTATION_COEFF * speed_correction);
 		left_motor_set_speed(speed + ROTATION_COEFF * speed_correction);
