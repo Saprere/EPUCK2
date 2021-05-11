@@ -40,9 +40,14 @@ static int16_t sound_animal_var;
 // #define FREQ_LEFT		19	//296Hz
 // #define FREQ_RIGHT		23	//359HZ
 // #define FREQ_BACKWARD	26	//406Hz
+
+// CASE 1
 #define FREQ_PREY		16	//frequence at witch the robot hunts
+//CASE 2
 #define FREQ_PLAY		19	//fr�quence at wich the robot plays
+//CASE 3
 #define FREQ_PANIC		23	//frequence at wich the robot panics
+
 #define MAX_FREQ		30	//we don't analyze after this index to not use resources for nothing
 
 // #define FREQ_FORWARD_L		(FREQ_FORWARD-1)
@@ -74,7 +79,7 @@ static int16_t sound_animal_var;
 *	uint16_t num_samples	Tells how many data we get in total (should always be 640)
 */
 
-
+// A SUPPRIMER ET METTRE DANS FREQUENCY CALCULUS
 int16_t sound_animal(float* data){
 	float max_norm = MIN_VALUE_THRESHOLD;
 	int16_t max_norm_index = -1; 
@@ -298,6 +303,7 @@ void processAudioData(int16_t *data, uint16_t num_samples){
 			angle_sonore = 0;
 		}
 
+		// FAIRE SELECTEUR DE CASE AVEC UINT4_T
 		sound_animal_var = sound_animal(micLeft_output);
 			// Faire une moyenne angulaire sur t_ech pour stabiliser le signal?
 
@@ -307,6 +313,8 @@ void processAudioData(int16_t *data, uint16_t num_samples){
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// A GARDER MAIS CHANGER LE NOM
 int16_t get_sound_animal_var(void){
 	return sound_animal_var;
 }
