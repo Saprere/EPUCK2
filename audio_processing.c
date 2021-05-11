@@ -30,7 +30,7 @@ static float micFront_output[FFT_SIZE];
 static float micBack_output[FFT_SIZE];
 
 static float angle_sonore;
-
+static int16_t sound_animal_var;
 
 
 #define MIN_VALUE_THRESHOLD	10000 
@@ -40,9 +40,9 @@ static float angle_sonore;
 // #define FREQ_LEFT		19	//296Hz
 // #define FREQ_RIGHT		23	//359HZ
 // #define FREQ_BACKWARD	26	//406Hz
-#define FREQ_PREY		16	//frequence at witch the robot hunts
-#define FREQ_PLAY		19	//fr�quence at wich the robot plays
-#define FREQ_PANIC		23	//frequence at wich the robot panics
+// #define FREQ_PREY		16	//frequence at witch the robot hunts
+// #define FREQ_PLAY		19	//fr�quence at wich the robot plays
+// #define FREQ_PANIC		23	//frequence at wich the robot panics
 #define MAX_FREQ		30	//we don't analyze after this index to not use resources for nothing
 
 // #define FREQ_FORWARD_L		(FREQ_FORWARD-1)
@@ -61,7 +61,7 @@ static float angle_sonore;
 #define FREQ_PANIC_H		(FREQ_PANIC+1)
 
 #define DIST_PREY			50
-// #define SIGNAL_FREQ //DEFINIR AL FREQUENCE OU CREER UNE VARIABLE POUR LA FONCTION animal
+#define SIGNAL_FREQ 		16//DEFINIR AL FREQUENCE OU CREER UNE VARIABLE POUR LA FONCTION animal
 
 
 /*
@@ -156,10 +156,10 @@ void sound_remote(){
 		led3 = 1;
 	}
 
-//	palWritePad(GPIOD, GPIOD_LED1, led1 ? 0 : 1);
-//	palWritePad(GPIOD, GPIOD_LED3, led3 ? 0 : 1);
-//	palWritePad(GPIOD, GPIOD_LED5, led5 ? 0 : 1);
-//	palWritePad(GPIOD, GPIOD_LED7, led7 ? 0 : 1);
+	palWritePad(GPIOD, GPIOD_LED1, led1 ? 0 : 1);
+	palWritePad(GPIOD, GPIOD_LED3, led3 ? 0 : 1);
+	palWritePad(GPIOD, GPIOD_LED5, led5 ? 0 : 1);
+	palWritePad(GPIOD, GPIOD_LED7, led7 ? 0 : 1);
 
 }
 
@@ -198,25 +198,21 @@ bool frequency_calcul(float* data1,float* data2){
 
 
 void angle_calculus(){
-
-
-	 double phase_right = -1 ;
-	 double phase_left = 1 ;
+	double phase_right = -1 ;
+	double phase_left = 1 ;
 
 	// PROBLEME ICI!
-//		phase_right = atan2(micRight_cmplx_input[SIGNAL_FREQ*2 + 1],micRight_cmplx_input[SIGNAL_FREQ*2]);
-//
-//
-//		phase_left = atan2(micLeft_cmplx_input[SIGNAL_FREQ*2 + 1], micLeft_cmplx_input[SIGNAL_FREQ*2]);
+	phase_right = atan2(micRight_cmplx_input[SIGNAL_FREQ*2 + 1],micRight_cmplx_input[SIGNAL_FREQ*2]);
 
 
-angle_sonore = phase_left-phase_right;
-//angle_sonore = angle_sonore + M_PI/4;
-//if(angle_sonore > M_PI){
-//	angle_sonore = -2 * M_PI + angle_sonore;
-//}
-double angle = angle_sonore * (360*2/M_PI);
+	phase_left = atan2(micLeft_cmplx_input[SIGNAL_FREQ*2 + 1], micLeft_cmplx_input[SIGNAL_FREQ*2]);
 
+	angle_sonore = phase_left-phase_right;
+	//angle_sonore = angle_sonore + M_PI/4;
+	//if(angle_sonore > M_PI){
+	//	angle_sonore = -2 * M_PI + angle_sonore;
+	//}
+	double angle = angle_sonore * (360*2/M_PI);
 
 //	chprintf((BaseSequentialStream *)&SD3,"f1 = %lf \n",micRight_cmplx_input[SIGNAL_FREQ + 1]);
 //	chprintf((BaseSequentialStream *)&SD3,"f2 = %lf \n",micRight_cmplx_input[SIGNAL_FREQ] );
@@ -303,14 +299,16 @@ void processAudioData(int16_t *data, uint16_t num_samples){
 			angle_sonore = 0;
 		}
 
-		sound_remote();
+		sound_animal_var = sound_animal(micLeft_output);
 			// Faire une moyenne angulaire sur t_ech pour stabiliser le signal?
 
 	}
 
 }
 
-
+int16_t get_sound_animal_var(void){
+	return sound_animal_var;
+}
 
 void wait_send_to_computer(void){
 	chBSemWait(&sendToComputer_sem);
