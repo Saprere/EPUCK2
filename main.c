@@ -86,6 +86,7 @@ int main(void)
     //inits the motors
     motors_init();
 
+    VL53L0X_start();
     //stars the threads for the animal move regulator
     animal_start();
     //pi_regulator_start();
