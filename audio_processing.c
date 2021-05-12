@@ -45,14 +45,14 @@ static int8_t f_mode;
 #define MAX_FREQ		30	//we don't analyze after this index to not use resources for nothing
 #define MIN_VALUE_THRESHOLD	10000
 
-// angle en radian +- 20°
+// angle en radian +- 20ï¿½
 #define ANGLE_THRESHOLD 0.35
 //cte de conversion
 #define ANGLE_CONVERT 2.85
 //cte de lissage exponentiel
 #define ALPHA 0.6
 
-#define INVALID_COUNT 10
+#define INVALID_COUNT 2
 
 #define FREQ_PREY_L			(FREQ_PREY-1)
 #define FREQ_PREY_H			(FREQ_PREY+1)
@@ -219,16 +219,19 @@ void processAudioData(int16_t *data, uint16_t num_samples){
 		//Set le mode d'utilisation
 		//A CHANGER
 		uint8_t f_mode_old = f_mode;
+		static uint32_t error_count;
 
 		f_mode = frequency_processing(micLeft_output,micRight_output);
-
-		if (f_mode == 0 && error_count < INVALID_COUNT){
-			f_mode = f_mode_old;
-		}
+		
+		 // if (f_mode == 0 && error_count < INVALID_COUNT){
+		 // 	f_mode = f_mode_old;
+		 // }
 
 		if(f_mode != 0){
 			angle_calculator();
-		}else{
+		}
+
+		else{
 			audio_angle = audio_angle_old;
 		}
 	}

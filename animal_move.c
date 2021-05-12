@@ -15,9 +15,9 @@
 #define MIN_VALUE_THRESHOLD	10000 
 
 #define MIN_FREQ		10	//we don't analyze before this index to not use resources for nothing
-#define FREQ_PREY		16	//frequence at witch the robot hunts
-#define FREQ_PLAY		19	//frequence at wich the robot plays
-#define FREQ_PANIC		23	//frequence at wich the robot panics
+#define FREQ_PREY		16	//250 Hz frequence at witch the robot hunts
+#define FREQ_PLAY		19	//296 Hz frequence at wich the robot plays
+#define FREQ_PANIC		23	//359 Hz frequence at wich the robot panics
 #define MAX_FREQ		30	//we don't analyze after this index to not use resources for nothing
 
 #define FREQ_PREY_L			(FREQ_PREY-1)
@@ -28,17 +28,11 @@
 #define FREQ_PANIC_H		(FREQ_PANIC+1)
 
 #define DIST_PREY				100
-#define DIST_PLAY				200
-#define MOTOR_SPEED_CRUISE		800
+
+#define MOTOR_SPEED_CRUISE		400
 
 //define for the cm convertor
 #define CM						(10^-1)
-
-
-//good luck to find it
-#define COLLISION_THRESHOLD 500
-
-
 
 bool collision_detection(){
 	if(get_prox(0) > COLLISION_THRESHOLD){
@@ -62,8 +56,6 @@ bool collision_detection(){
 	}
 }
 
-
-
 static THD_WORKING_AREA(waAnimal, 256); //A OPTIMIZER
 static THD_FUNCTION(Animal, arg) {
 
@@ -85,17 +77,18 @@ static THD_FUNCTION(Animal, arg) {
     while(1){
         time = chVTGetSystemTime(); 
 
-		//distance_TOF is updated by VL53L0X TOF library
-		distance_TOF = VL53L0X_get_dist_mm();
 
         //MODIFIER
         f_mode = get_f_mode();
 
+        //distance_TOF is updated by VL53L0X TOF library
+        distance_TOF = VL53L0X_get_dist_mm();
+
         //computes the speed to give to the motors
-        speed = pi_regulator((float)distance_TOF*CM, DIST_PLAY*CM);
+        speed = pi_regulator_distance((float)distance_TOF*CM, DIST_PLAY*CM);
 
         //computes a correction factor to let the robot rotate to be aligned with the sound source
-        speed_correction = get_angle(); // regulation angle POUR LA CORRECTION
+        speed_correction = pi_regulator_angle((float)get_angle(), 0); // regulation angle POUR LA CORRECTION
 
         //if the angle variation is neglectable, don't rotate
         if(abs(speed_correction) < ROTATION_THRESHOLD){
@@ -107,7 +100,7 @@ static THD_FUNCTION(Animal, arg) {
 	        //The robot moves towards the prey
 	        case 1:
 
-				if(distance_TOF <= DIST_PREY){
+				if(distance_TOF >= DIST_PREY){
 					left_motor_set_speed(MOTOR_SPEED_CRUISE - ROTATION_COEFF * speed_correction); 
 					right_motor_set_speed(MOTOR_SPEED_CRUISE + ROTATION_COEFF * speed_correction);
 				}
@@ -141,7 +134,7 @@ static THD_FUNCTION(Animal, arg) {
 				right_motor_set_speed(0);
 
 	        	break;
-	        }
+	    }
 
         //100Hz
         chThdSleepUntilWindowed(time, time + MS2ST(10));
@@ -151,5 +144,3 @@ static THD_FUNCTION(Animal, arg) {
 void animal_start(void){
 	chThdCreateStatic(waAnimal, sizeof(waAnimal), NORMALPRIO, Animal, NULL);
 }
-
-

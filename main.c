@@ -88,9 +88,10 @@ int main(void)
 
     proximity_start();
 
-    audio_init(); //??????????????????????
+    audio_init();
 
     VL53L0X_start();
+
     //stars the threads for the animal move regulator
     animal_start();
 
