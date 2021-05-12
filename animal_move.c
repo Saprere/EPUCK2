@@ -35,6 +35,35 @@
 #define CM						(10^-1)
 
 
+//good luck to find it
+#define COLLISION_THRESHOLD 500
+
+
+
+bool collision_detection(){
+	if(get_prox(0) > COLLISION_THRESHOLD){
+		return 1;
+	}else if(get_prox(1) >COLLISION_THRESHOLD){
+		return 1;
+	}else if(get_prox(2) >COLLISION_THRESHOLD){
+		return 1;
+	}else if(get_prox(3) >COLLISION_THRESHOLD){
+		return 1;
+	}else if(get_prox(4) >COLLISION_THRESHOLD){
+		return 1;
+	}else if(get_prox(5) >COLLISION_THRESHOLD){
+		return 1;
+	}else if(get_prox(6) >COLLISION_THRESHOLD){
+		return 1;
+	}else if(get_prox(7) >COLLISION_THRESHOLD){
+		return 1;
+	}else{
+		return 0;
+	}
+}
+
+
+
 static THD_WORKING_AREA(waAnimal, 256); //A OPTIMIZER
 static THD_FUNCTION(Animal, arg) {
 
@@ -122,3 +151,5 @@ static THD_FUNCTION(Animal, arg) {
 void animal_start(void){
 	chThdCreateStatic(waAnimal, sizeof(waAnimal), NORMALPRIO, Animal, NULL);
 }
+
+

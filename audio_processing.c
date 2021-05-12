@@ -219,9 +219,9 @@ void processAudioData(int16_t *data, uint16_t num_samples){
 		//Set le mode d'utilisation
 		//A CHANGER
 		uint8_t f_mode_old = f_mode;
-		static uint32_t error_count;
 
 		f_mode = frequency_processing(micLeft_output,micRight_output);
+
 		if (f_mode == 0 && error_count < INVALID_COUNT){
 			f_mode = f_mode_old;
 		}
