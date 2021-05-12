@@ -67,11 +67,15 @@ int main(void)
     //inits the motors
     motors_init();
 
+<<<<<<< HEAD
     //stars the threads for the animal move regulator
     animal_start();
     //pi_regulator_start();
 
     //audio_init(); ??????????????????????
+=======
+    audio_init();
+>>>>>>> audio
 
 
     //send_tab is used to save the state of the buffer to send (double buffering)
