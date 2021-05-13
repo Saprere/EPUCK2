@@ -17,12 +17,21 @@
 #include <fft.h>
 #include <communications.h>
 #include <arm_math.h>
+#include <sensors/proximity.h>
+#include <sensors/VL53L0X/VL53L0X.h>
+
 
 //uncomment to send the FFTs results from the real microphones
 #define SEND_FROM_MIC
 
 //uncomment to use double buffering to send the FFT to the computer
 #define DOUBLE_BUFFERING
+
+
+messagebus_t bus;
+MUTEX_DECL(bus_lock);
+CONDVAR_DECL(bus_condvar);
+
 
 void SendUint8ToComputer(uint8_t* data, uint16_t size) 
 {
@@ -85,7 +94,8 @@ int main(void)
     timer12_start();
     //inits the motors
     motors_init();
-
+    //initialise le bus pour le capteur de proximité
+    messagebus_init(&bus, &bus_lock, &bus_condvar);
     proximity_start();
 
     audio_init();
@@ -94,7 +104,7 @@ int main(void)
 
     //stars the threads for the animal move regulator
     animal_start();
-
+    chprintf((BaseSequentialStream *)&SD3, "%4d",get_prox(1));
     //send_tab is used to save the state of the buffer to send (double buffering)
     //to avoid modifications of the buffer while sending it
     static float send_tab[FFT_SIZE];

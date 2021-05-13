@@ -11,6 +11,7 @@
 #include <audio_processing.h>
 #include <pi_regulator.h>
 #include <sensors/VL53L0X/VL53L0X.h>
+#include <sensors/proximity.h>
 
 #define MIN_VALUE_THRESHOLD	10000 
 
@@ -34,22 +35,25 @@
 //define for the cm convertor
 #define CM						(10^-1)
 
-bool collision_detection(){
-	if(get_prox(0) > COLLISION_THRESHOLD){
+#define COLLISION_THRESHOLD	65
+
+bool collision_detection(void){
+
+	if(get_calibrated_prox(0) > COLLISION_THRESHOLD){
 		return 1;
-	}else if(get_prox(1) >COLLISION_THRESHOLD){
+	}else if(get_calibrated_prox(1) >COLLISION_THRESHOLD){
 		return 1;
-	}else if(get_prox(2) >COLLISION_THRESHOLD){
+	}else if(get_calibrated_prox(2) >COLLISION_THRESHOLD){
 		return 1;
-	}else if(get_prox(3) >COLLISION_THRESHOLD){
+	}else if(get_calibrated_prox(3) >COLLISION_THRESHOLD){
 		return 1;
-	}else if(get_prox(4) >COLLISION_THRESHOLD){
+	}else if(get_calibrated_prox(4) >COLLISION_THRESHOLD){
 		return 1;
-	}else if(get_prox(5) >COLLISION_THRESHOLD){
+	}else if(get_calibrated_prox(5) >COLLISION_THRESHOLD){
 		return 1;
-	}else if(get_prox(6) >COLLISION_THRESHOLD){
+	}else if(get_calibrated_prox(6) >COLLISION_THRESHOLD){
 		return 1;
-	}else if(get_prox(7) >COLLISION_THRESHOLD){
+	}else if(get_calibrated_prox(7) >COLLISION_THRESHOLD){
 		return 1;
 	}else{
 		return 0;
@@ -71,10 +75,16 @@ static THD_FUNCTION(Animal, arg) {
 
     float max_norm = MIN_VALUE_THRESHOLD;
 
+    //permet de calibrer les IR avec la lumière ambiante
+    calibrate_ir();
     //MODIFIER
 	int8_t f_mode = 0;
 
     while(1){
+
+
+    	bool collision = collision_detection();
+
         time = chVTGetSystemTime(); 
 
 
