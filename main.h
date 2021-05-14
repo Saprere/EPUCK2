@@ -26,7 +26,7 @@ WARNING : Not on the same port !!
 //#define BODY_LED	GPIOB, 2
 
 //constants for the differents parts of the project
-#define ROTATION_THRESHOLD		10
+#define ROTATION_THRESHOLD		50
 #define ROTATION_COEFF			2
 #define GOAL_DISTANCE 			10.0f //REDEFINE DISTANCE GOAL
 #define MAX_DISTANCE 			25.0f //REDEFINE DISTANCE GOAL

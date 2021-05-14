@@ -10,7 +10,6 @@
 #include <communications.h>
 #include <fft.h>
 #include <arm_math.h>
-#include <math.h>
 
 #include <pi_regulator.h>
 #include <sensors/VL53L0X/VL53L0X.h>
@@ -38,11 +37,12 @@ static int8_t f_mode;
 // CASE 1
 #define FREQ_PREY		16	//frequence at witch the robot hunts
 //CASE 2
-#define FREQ_PLAY		23	//frequence at wich the robot plays
+#define FREQ_PLAY		19	//frequence at wich the robot plays
 //CASE 3
-#define FREQ_PANIC		26	//frequence at wich the robot panic
+#define FREQ_PANIC		23	//frequence at wich the robot panic
 
 #define MAX_FREQ		30	//we don't analyze after this index to not use resources for nothing
+
 #define MIN_VALUE_THRESHOLD	10000
 
 // angle en radian +- 20�
@@ -60,7 +60,6 @@ static int8_t f_mode;
 #define FREQ_PLAY_H			(FREQ_PLAY+1)
 #define FREQ_PANIC_L		(FREQ_PANIC-1)
 #define FREQ_PANIC_H		(FREQ_PANIC+1)
-#define DIST_PREY			50
 
 //PRIVATE FUNCTIONS =======================================================
 
@@ -132,7 +131,7 @@ void angle_calculator(void){
 
 	phase_right = atan2(micRight_cmplx_input[signal_freq * 2 + 1],micRight_cmplx_input[signal_freq * 2]);
 	phase_left = atan2(micLeft_cmplx_input[signal_freq * 2 + 1], micLeft_cmplx_input[signal_freq * 2]);
-	audio_angle = phase_left-phase_right;
+	audio_angle = (phase_left - phase_right) * ANGLE_CONVERT;
 
 
 	//Permet de filtrer les valeurs hors limites
@@ -223,9 +222,9 @@ void processAudioData(int16_t *data, uint16_t num_samples){
 
 		f_mode = frequency_processing(micLeft_output,micRight_output);
 		
-		 // if (f_mode == 0 && error_count < INVALID_COUNT){
-		 // 	f_mode = f_mode_old;
-		 // }
+		// if (f_mode == 0 && error_count < INVALID_COUNT){
+		// 	f_mode = f_mode_old;
+		// }
 
 		if(f_mode != 0){
 			angle_calculator();

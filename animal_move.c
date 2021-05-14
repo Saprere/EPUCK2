@@ -15,47 +15,34 @@
 
 #define MIN_VALUE_THRESHOLD	10000 
 
-#define MIN_FREQ		10	//we don't analyze before this index to not use resources for nothing
-#define FREQ_PREY		16	//250 Hz frequence at witch the robot hunts
-#define FREQ_PLAY		19	//296 Hz frequence at wich the robot plays
-#define FREQ_PANIC		23	//359 Hz frequence at wich the robot panics
-#define MAX_FREQ		30	//we don't analyze after this index to not use resources for nothing
-
-#define FREQ_PREY_L			(FREQ_PREY-1)
-#define FREQ_PREY_H			(FREQ_PREY+1)
-#define FREQ_PLAY_L			(FREQ_PLAY-1)
-#define FREQ_PLAY_H			(FREQ_PLAY+1)
-#define FREQ_PANIC_L		(FREQ_PANIC-1)
-#define FREQ_PANIC_H		(FREQ_PANIC+1)
-
 #define PAUSE 				1000 //thread pause of 1000ms
 
 #define COLLISION_THRESHOLD	65
 
-// bool collision_detection(void){
+bool collision_detection(void){
 
-// 	if(get_calibrated_prox(0) > COLLISION_THRESHOLD){
-// 		return 1;
-// 	}else if(get_calibrated_prox(1) >COLLISION_THRESHOLD){
-// 		return 1;
-// 	}else if(get_calibrated_prox(2) >COLLISION_THRESHOLD){
-// 		return 1;
-// 	}else if(get_calibrated_prox(3) >COLLISION_THRESHOLD){
-// 		return 1;
-// 	}else if(get_calibrated_prox(4) >COLLISION_THRESHOLD){
-// 		return 1;
-// 	}else if(get_calibrated_prox(5) >COLLISION_THRESHOLD){
-// 		return 1;
-// 	}else if(get_calibrated_prox(6) >COLLISION_THRESHOLD){
-// 		return 1;
-// 	}else if(get_calibrated_prox(7) >COLLISION_THRESHOLD){
-// 		return 1;
-// 	}else{
-// 		return 0;
-// 	}
-// }
+	if(get_calibrated_prox(0) > COLLISION_THRESHOLD){
+		return 1;
+	}else if(get_calibrated_prox(1) >COLLISION_THRESHOLD){
+		return 1;
+	}else if(get_calibrated_prox(2) >COLLISION_THRESHOLD){
+		return 1;
+	}else if(get_calibrated_prox(3) >COLLISION_THRESHOLD){
+		return 1;
+	}else if(get_calibrated_prox(4) >COLLISION_THRESHOLD){
+		return 1;
+	}else if(get_calibrated_prox(5) >COLLISION_THRESHOLD){
+		return 1;
+	}else if(get_calibrated_prox(6) >COLLISION_THRESHOLD){
+		return 1;
+	}else if(get_calibrated_prox(7) >COLLISION_THRESHOLD){
+		return 1;
+	}else{
+		return 0;
+	}
+}
 
-static THD_WORKING_AREA(waAnimal, 256); //A OPTIMIZER
+static THD_WORKING_AREA(waAnimal, 512); //A OPTIMIZER
 static THD_FUNCTION(Animal, arg) {
 
     chRegSetThreadName(__FUNCTION__);
@@ -104,60 +91,64 @@ static THD_FUNCTION(Animal, arg) {
         	speed = 0;
         }
 
+//        if(get_angle() != )
+        left_motor_set_speed(ROTATION_COEFF * speed_correction); 
+		right_motor_set_speed(-ROTATION_COEFF * speed_correction);
+
      //    if(collision && f_mode == 1){
     	// 	f_mode = 0;
     	// 	obstacle = 1;
     	// }
 
-        switch(f_mode){
+   //      switch(f_mode){
 
-	        //The robot moves towards the prey
-	        case 1:
+	  //       //The robot moves towards the prey
+	  //       case 1:
 
-				if(distance_TOF >= DIST_PREY){
-					left_motor_set_speed(MOTOR_SPEED_CRUISE);// - ROTATION_COEFF * speed_correction); 
-					right_motor_set_speed(MOTOR_SPEED_CRUISE);// + ROTATION_COEFF * speed_correction);
-				}
+			// 	if(distance_TOF >= DIST_PREY){
+			// 		left_motor_set_speed(MOTOR_SPEED_CRUISE);// - ROTATION_COEFF * speed_correction); 
+			// 		right_motor_set_speed(MOTOR_SPEED_CRUISE);// + ROTATION_COEFF * speed_correction);
+			// 	}
 				
-				else{
-					left_motor_set_speed(MOTOR_SPEED_LIMIT);
-					right_motor_set_speed(MOTOR_SPEED_LIMIT);
-				}
+			// 	else{
+			// 		left_motor_set_speed(MOTOR_SPEED_LIMIT);
+			// 		right_motor_set_speed(MOTOR_SPEED_LIMIT);
+			// 	}
 
-	        	break;
+	  //       	break;
 
-			//The robot starts playing
-	        case 2:
+			// //The robot starts playing
+	  //       case 2:
 	        
-				right_motor_set_speed(speed);// - ROTATION_COEFF * speed_correction);
-				left_motor_set_speed(speed);//  + ROTATION_COEFF * speed_correction);
+			// 	right_motor_set_speed(speed);// - ROTATION_COEFF * speed_correction);
+			// 	left_motor_set_speed(speed);//  + ROTATION_COEFF * speed_correction);
 
-	        	break;
+	  //       	break;
 
-	        //The robot panics
-	        case 3:
+	  //       //The robot panics
+	  //       case 3:
 
-	        	left_motor_set_speed(MOTOR_SPEED_LIMIT);
+	  //       	left_motor_set_speed(MOTOR_SPEED_LIMIT);
 
 
-	        	break;
+	  //       	break;
 
-	        //Idle mode
-	        default:
+	  //       //Idle mode
+	  //       default:
 
-	         	left_motor_set_speed(0);
-				right_motor_set_speed(0);
+	  //        	left_motor_set_speed(0);
+			// 	right_motor_set_speed(0);
 
-				// if(obstacle){
-				// 	chThdSleepMilliseconds(PAUSE); 
-				// 	obstacle = 0;
-				// 	left_motor_set_speed(-MOTOR_SPEED_CRUISE - ROTATION_COEFF * speed_correction); 
-				// 	right_motor_set_speed(-MOTOR_SPEED_CRUISE + ROTATION_COEFF * speed_correction);
+			// 	// if(obstacle){
+			// 	// 	chThdSleepMilliseconds(PAUSE); 
+			// 	// 	obstacle = 0;
+			// 	// 	left_motor_set_speed(-MOTOR_SPEED_CRUISE - ROTATION_COEFF * speed_correction); 
+			// 	// 	right_motor_set_speed(-MOTOR_SPEED_CRUISE + ROTATION_COEFF * speed_correction);
 					
-				// }
+			// 	// }
 
-	        	break;
-	    }
+	  //       	break;
+	  //   }
 
         //100Hz
         chThdSleepUntilWindowed(time, time + MS2ST(10));

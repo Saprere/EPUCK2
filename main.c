@@ -94,16 +94,18 @@ int main(void)
     timer12_start();
     //inits the motors
     motors_init();
-    //initialise le bus pour le capteur de proximité
+    //initialise le bus pour le capteur de proximitï¿½
     messagebus_init(&bus, &bus_lock, &bus_condvar);
     proximity_start();
 
+    VL53L0X_start();
+
     audio_init();
 
-    VL53L0X_start();
 
     //stars the threads for the animal move regulator
     animal_start();
+
     chprintf((BaseSequentialStream *)&SD3, "%4d",get_prox(1));
     //send_tab is used to save the state of the buffer to send (double buffering)
     //to avoid modifications of the buffer while sending it
