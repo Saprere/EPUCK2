@@ -28,13 +28,6 @@
 #define FREQ_PANIC_L		(FREQ_PANIC-1)
 #define FREQ_PANIC_H		(FREQ_PANIC+1)
 
-#define DIST_PREY				100
-
-#define MOTOR_SPEED_CRUISE		400
-
-//define for the cm convertor
-#define CM						(10^-1)
-
 #define COLLISION_THRESHOLD	65
 
 bool collision_detection(void){
@@ -80,11 +73,14 @@ static THD_FUNCTION(Animal, arg) {
     //MODIFIER
 	int8_t f_mode = 0;
 
+	bool obstacle = 0;
+
     while(1){
 
 
     	bool collision = collision_detection();
 
+    
         time = chVTGetSystemTime(); 
 
 
@@ -104,6 +100,11 @@ static THD_FUNCTION(Animal, arg) {
         if(abs(speed_correction) < ROTATION_THRESHOLD){
         	speed_correction = 0;
         }
+
+        if(collision){
+    		f_mode = 0;
+    		obstable = 1;
+    	}
 
         switch(f_mode){
 
@@ -142,6 +143,15 @@ static THD_FUNCTION(Animal, arg) {
 
 	         	left_motor_set_speed(0);
 				right_motor_set_speed(0);
+
+				if(obstable){
+					wait(10);
+					obstacle = 0;
+					while(distance_TOF <= DIST_PLAY){
+						left_motor_set_speed(-MOTOR_SPEED_CRUISE - ROTATION_COEFF * speed_correction); 
+						ight_motor_set_speed(-MOTOR_SPEED_CRUISE + ROTATION_COEFF * speed_correction);
+					}
+				}
 
 	        	break;
 	    }
