@@ -30,12 +30,18 @@ WARNING : Not on the same port !!
 #define ROTATION_COEFF			2
 #define GOAL_DISTANCE 			10.0f //REDEFINE DISTANCE GOAL
 #define MAX_DISTANCE 			25.0f //REDEFINE DISTANCE GOAL
-#define ERROR_THRESHOLD			2.5f	//MODIFY IF NOISE COMING FROM TOF
+#define ERROR_THRESHOLD			0.1f	//MODIFY IF NOISE COMING FROM TOF
 #define KP						80000.0f
-#define KI 						350.0f	//must not be zero
+#define KI 						3.5f	//must not be zero
 #define MAX_SUM_ERROR 			(MOTOR_SPEED_LIMIT/KI)
+#define MOTOR_SPEED_CRUISE		400
 #define DIST_PLAY				400
+#define DIST_PREY				200
+#define DIST_TRESHOLD			50
+#define DIST_TRESHOLD_H			(DIST_PLAY + DIST_TRESHOLD)
+#define DIST_TRESHOLD_L			(DIST_PLAY - DIST_TRESHOLD)
 
+#define CM						(10^-1)
 
 /** Robot wide IPC bus. */
 extern messagebus_t bus;

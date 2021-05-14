@@ -9,9 +9,6 @@
 #include <pi_regulator.h>
 #include <sensors/VL53L0X/VL53L0X.h>
 
-#define CM                      (10^-1)
-#define DIST_PLAY               (300)
-
 //simple PI regulator implementation
 int16_t pi_regulator_distance(float distance, float goal){
 
@@ -68,7 +65,7 @@ int16_t pi_regulator_angle(float distance, float goal){
         sum_error = -MAX_SUM_ERROR;
     }
 
-    speed = KP/100 * error + KI/100 * sum_error;
+    speed = KP * error + KI * sum_error;
 
     return (int16_t)speed;
 }

@@ -38,9 +38,9 @@ static int8_t f_mode;
 // CASE 1
 #define FREQ_PREY		16	//frequence at witch the robot hunts
 //CASE 2
-#define FREQ_PLAY		19	//fr�quence at wich the robot plays
+#define FREQ_PLAY		23	//frequence at wich the robot plays
 //CASE 3
-#define FREQ_PANIC		23	//frequence at wich the robot panic
+#define FREQ_PANIC		26	//frequence at wich the robot panic
 
 #define MAX_FREQ		30	//we don't analyze after this index to not use resources for nothing
 #define MIN_VALUE_THRESHOLD	10000

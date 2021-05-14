@@ -28,30 +28,32 @@
 #define FREQ_PANIC_L		(FREQ_PANIC-1)
 #define FREQ_PANIC_H		(FREQ_PANIC+1)
 
+#define PAUSE 				1000 //thread pause of 1000ms
+
 #define COLLISION_THRESHOLD	65
 
-bool collision_detection(void){
+// bool collision_detection(void){
 
-	if(get_calibrated_prox(0) > COLLISION_THRESHOLD){
-		return 1;
-	}else if(get_calibrated_prox(1) >COLLISION_THRESHOLD){
-		return 1;
-	}else if(get_calibrated_prox(2) >COLLISION_THRESHOLD){
-		return 1;
-	}else if(get_calibrated_prox(3) >COLLISION_THRESHOLD){
-		return 1;
-	}else if(get_calibrated_prox(4) >COLLISION_THRESHOLD){
-		return 1;
-	}else if(get_calibrated_prox(5) >COLLISION_THRESHOLD){
-		return 1;
-	}else if(get_calibrated_prox(6) >COLLISION_THRESHOLD){
-		return 1;
-	}else if(get_calibrated_prox(7) >COLLISION_THRESHOLD){
-		return 1;
-	}else{
-		return 0;
-	}
-}
+// 	if(get_calibrated_prox(0) > COLLISION_THRESHOLD){
+// 		return 1;
+// 	}else if(get_calibrated_prox(1) >COLLISION_THRESHOLD){
+// 		return 1;
+// 	}else if(get_calibrated_prox(2) >COLLISION_THRESHOLD){
+// 		return 1;
+// 	}else if(get_calibrated_prox(3) >COLLISION_THRESHOLD){
+// 		return 1;
+// 	}else if(get_calibrated_prox(4) >COLLISION_THRESHOLD){
+// 		return 1;
+// 	}else if(get_calibrated_prox(5) >COLLISION_THRESHOLD){
+// 		return 1;
+// 	}else if(get_calibrated_prox(6) >COLLISION_THRESHOLD){
+// 		return 1;
+// 	}else if(get_calibrated_prox(7) >COLLISION_THRESHOLD){
+// 		return 1;
+// 	}else{
+// 		return 0;
+// 	}
+// }
 
 static THD_WORKING_AREA(waAnimal, 256); //A OPTIMIZER
 static THD_FUNCTION(Animal, arg) {
@@ -66,12 +68,10 @@ static THD_FUNCTION(Animal, arg) {
 
     uint16_t distance_TOF = 0;
 
-    float max_norm = MIN_VALUE_THRESHOLD;
-
-    //permet de calibrer les IR avec la lumière ambiante
+    //permet de calibrer les IR avec la lumiere ambiante
     calibrate_ir();
     //MODIFIER
-	int8_t f_mode = 0;
+	int8_t f_mode = 0; //////////////////////////c'est bien int8 pour un switch ?
 
 	bool obstacle = 0;
 
@@ -80,7 +80,6 @@ static THD_FUNCTION(Animal, arg) {
 
     	bool collision = collision_detection();
 
-    
         time = chVTGetSystemTime(); 
 
 
@@ -101,10 +100,14 @@ static THD_FUNCTION(Animal, arg) {
         	speed_correction = 0;
         }
 
-        if(collision){
-    		f_mode = 0;
-    		obstable = 1;
-    	}
+        if(distance_TOF < DIST_TRESHOLD_H && distance_TOF > DIST_TRESHOLD_L){
+        	speed = 0;
+        }
+
+     //    if(collision && f_mode == 1){
+    	// 	f_mode = 0;
+    	// 	obstacle = 1;
+    	// }
 
         switch(f_mode){
 
@@ -112,8 +115,8 @@ static THD_FUNCTION(Animal, arg) {
 	        case 1:
 
 				if(distance_TOF >= DIST_PREY){
-					left_motor_set_speed(MOTOR_SPEED_CRUISE - ROTATION_COEFF * speed_correction); 
-					right_motor_set_speed(MOTOR_SPEED_CRUISE + ROTATION_COEFF * speed_correction);
+					left_motor_set_speed(MOTOR_SPEED_CRUISE);// - ROTATION_COEFF * speed_correction); 
+					right_motor_set_speed(MOTOR_SPEED_CRUISE);// + ROTATION_COEFF * speed_correction);
 				}
 				
 				else{
@@ -126,8 +129,8 @@ static THD_FUNCTION(Animal, arg) {
 			//The robot starts playing
 	        case 2:
 	        
-				right_motor_set_speed(speed - ROTATION_COEFF * speed_correction);
-				left_motor_set_speed(speed  + ROTATION_COEFF * speed_correction);
+				right_motor_set_speed(speed);// - ROTATION_COEFF * speed_correction);
+				left_motor_set_speed(speed);//  + ROTATION_COEFF * speed_correction);
 
 	        	break;
 
@@ -135,6 +138,7 @@ static THD_FUNCTION(Animal, arg) {
 	        case 3:
 
 	        	left_motor_set_speed(MOTOR_SPEED_LIMIT);
+
 
 	        	break;
 
@@ -144,14 +148,13 @@ static THD_FUNCTION(Animal, arg) {
 	         	left_motor_set_speed(0);
 				right_motor_set_speed(0);
 
-				if(obstable){
-					wait(10);
-					obstacle = 0;
-					while(distance_TOF <= DIST_PLAY){
-						left_motor_set_speed(-MOTOR_SPEED_CRUISE - ROTATION_COEFF * speed_correction); 
-						ight_motor_set_speed(-MOTOR_SPEED_CRUISE + ROTATION_COEFF * speed_correction);
-					}
-				}
+				// if(obstacle){
+				// 	chThdSleepMilliseconds(PAUSE); 
+				// 	obstacle = 0;
+				// 	left_motor_set_speed(-MOTOR_SPEED_CRUISE - ROTATION_COEFF * speed_correction); 
+				// 	right_motor_set_speed(-MOTOR_SPEED_CRUISE + ROTATION_COEFF * speed_correction);
+					
+				// }
 
 	        	break;
 	    }
