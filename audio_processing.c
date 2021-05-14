@@ -27,10 +27,7 @@ static float micRight_output[FFT_SIZE];
 
 static float audio_angle;
 static float audio_angle_old;
-static float error_count;
-static int8_t f_mode;
-
-#define MIN_VALUE_THRESHOLD	10000 
+static int8_t mode;
 
 #define MIN_FREQ		10	//we don't analyze before this index to not use resources for nothing
 
@@ -43,14 +40,14 @@ static int8_t f_mode;
 
 #define MAX_FREQ		30	//we don't analyze after this index to not use resources for nothing
 
-#define MIN_VALUE_THRESHOLD	10000
+#define MIN_VALUE_THRESHOLD	15000
 
-// angle en radian +- 20ï¿½
+// angle en radian
 #define ANGLE_THRESHOLD 0.35
 //cte de conversion
 #define ANGLE_CONVERT 2.85
 //cte de lissage exponentiel
-#define ALPHA 0.6
+#define ALPHA 0.65
 
 #define INVALID_COUNT 2
 
@@ -64,73 +61,51 @@ static int8_t f_mode;
 //PRIVATE FUNCTIONS =======================================================
 
 
-uint8_t frequency_processing(float* data1,float* data2){
+uint16_t frequency_processing(float* data1,float* data2){
 
-	float max_norm1 = MIN_VALUE_THRESHOLD;
-	float max_norm2 = MIN_VALUE_THRESHOLD;
+	//permet de respecter la dernière condition
+	float max_norm1 = MIN_VALUE_THRESHOLD ;
+	float max_norm2 = MIN_VALUE_THRESHOLD ;
 
-	int16_t max_norm_index1 = -1;
-	int16_t max_norm_index2 = -1;
+	int16_t max_norm_index1 = 0;
+	int16_t max_norm_index2 = 0;
 
 	//search for the highest peak
 	for(uint16_t i = MIN_FREQ ; i <= MAX_FREQ ; i++){
 
 		if(data1[i] > max_norm1){
-
 			max_norm1 = data1[i];
 			max_norm_index1 = i;
-
 		}
 	}
+
 	for(uint16_t i = MIN_FREQ ; i <= MAX_FREQ ; i++){
 
 		if(data2[i] > max_norm2){
-
 			max_norm2 = data2[i];
 			max_norm_index2 = i;
-
 		}
 	}
 
-	if(max_norm1 > MIN_VALUE_THRESHOLD && max_norm_index1 == FREQ_PREY){
-		if(max_norm2 > MIN_VALUE_THRESHOLD && max_norm_index2 == FREQ_PREY){
-			error_count = 0;
-			return 1;
-		}
-	}
-	else if(max_norm1 > MIN_VALUE_THRESHOLD && max_norm_index1 == FREQ_PLAY){
-		if(max_norm2 > MIN_VALUE_THRESHOLD && max_norm_index2 == FREQ_PLAY){
-			error_count = 0;
-			return 2;
-		}
-	}
-	else if(max_norm1 > MIN_VALUE_THRESHOLD && max_norm_index1 == FREQ_PANIC){
-		if(max_norm2 > MIN_VALUE_THRESHOLD && max_norm_index2 == FREQ_PANIC){
-			error_count = 0;
-			return 3;
-		}
+
+	if(max_norm1 > MIN_VALUE_THRESHOLD && max_norm2 > MIN_VALUE_THRESHOLD
+	   && max_norm_index1 == max_norm_index2){
+		return max_norm_index1;
 	}else{
-		error_count++;
 		return 0;
 	}
+
 }
 
-void angle_calculator(void){
 
+
+void angle_calculator(uint16_t signal_freq_index){
+	chprintf((BaseSequentialStream *)&SD3,"2 = %lf \n",audio_angle*(180/3.14) );
 	double phase_right = 0 ;
 	double phase_left = 0 ;
-	uint8_t signal_freq = 0;
 
-	if (f_mode == 1){
-		signal_freq = FREQ_PREY;
-	}else if(f_mode == 2){
-		signal_freq = FREQ_PLAY;
-	}else{
-		signal_freq = FREQ_PANIC;
-	}
-
-	phase_right = atan2(micRight_cmplx_input[signal_freq * 2 + 1],micRight_cmplx_input[signal_freq * 2]);
-	phase_left = atan2(micLeft_cmplx_input[signal_freq * 2 + 1], micLeft_cmplx_input[signal_freq * 2]);
+	phase_right = atan2(micRight_cmplx_input[signal_freq_index * 2 + 1],micRight_cmplx_input[signal_freq_index * 2]);
+	phase_left = atan2(micLeft_cmplx_input[signal_freq_index * 2 + 1], micLeft_cmplx_input[signal_freq_index * 2]);
 	audio_angle = (phase_left - phase_right) * ANGLE_CONVERT;
 
 
@@ -141,9 +116,20 @@ void angle_calculator(void){
 		audio_angle = audio_angle * ALPHA + (1 - ALPHA) * audio_angle_old;
 		audio_angle_old = audio_angle;
 	}
+
 }
 
-
+uint8_t mode_selector(uint16_t f){
+	if(f >= FREQ_PREY_L && f <= FREQ_PREY_H){
+		return 1;
+	}else if(f >= FREQ_PLAY_L && f <= FREQ_PLAY_H){
+		return 2;
+	}else if(f >= FREQ_PANIC_L && f <= FREQ_PANIC_H	){
+		return 3;
+	}else{
+		return 0;
+	}
+}
 
 //PUBLIC FUNCTIONS ========================
 
@@ -172,13 +158,12 @@ float* get_audio_buffer_ptr(BUFFER_NAME_t name){
 void audio_init(){
 	audio_angle_old = 0;
 	audio_angle = 0;
-	f_mode = 0;
-	error_count = INVALID_COUNT;
+	mode = 0;
 }
 
 void processAudioData(int16_t *data, uint16_t num_samples){
-
 	static uint16_t nb_samples = 0;
+	uint16_t f_index;
 
 	//loop to fill the buffers
 	for(uint16_t i = 0 ; i < num_samples ; i+=4){
@@ -215,33 +200,27 @@ void processAudioData(int16_t *data, uint16_t num_samples){
 
 		nb_samples = 0;
 
-		//Set le mode d'utilisation
-		//A CHANGER
-		uint8_t f_mode_old = f_mode;
-		static uint32_t error_count;
-
-		f_mode = frequency_processing(micLeft_output,micRight_output);
+		f_index = frequency_processing(micLeft_output,micRight_output);
 		
-		// if (f_mode == 0 && error_count < INVALID_COUNT){
-		// 	f_mode = f_mode_old;
-		// }
+		mode = mode_selector(f_index);
 
-		if(f_mode != 0){
-			angle_calculator();
+		if(mode == 1 || mode == 2){
+			angle_calculator(f_index);
 		}
-
 		else{
-			audio_angle = audio_angle_old;
+
+			audio_angle = 0;
 		}
 	}
+	chprintf((BaseSequentialStream *)&SD3,"angle = %lf \n",audio_angle*(180/3.14) );
 }
 
 double get_angle(){
 	return audio_angle;
 }
 
-int8_t get_f_mode(){
-	return f_mode;
+int8_t get_mode(){
+	return mode;
 }
 
 

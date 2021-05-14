@@ -42,7 +42,7 @@ bool collision_detection(void){
 	}
 }
 
-static THD_WORKING_AREA(waAnimal, 512); //A OPTIMIZER
+static THD_WORKING_AREA(waAnimal, 128); //A OPTIMIZER
 static THD_FUNCTION(Animal, arg) {
 
     chRegSetThreadName(__FUNCTION__);
@@ -71,7 +71,7 @@ static THD_FUNCTION(Animal, arg) {
 
 
         //MODIFIER
-        f_mode = get_f_mode();
+        f_mode = get_mode();
 
         //distance_TOF is updated by VL53L0X TOF library
         distance_TOF = VL53L0X_get_dist_mm();
@@ -82,6 +82,8 @@ static THD_FUNCTION(Animal, arg) {
         //computes a correction factor to let the robot rotate to be aligned with the sound source
         speed_correction = pi_regulator_angle((float)get_angle(), 0); // regulation angle POUR LA CORRECTION
 
+
+
         //if the angle variation is neglectable, don't rotate
         if(abs(speed_correction) < ROTATION_THRESHOLD){
         	speed_correction = 0;
@@ -91,8 +93,8 @@ static THD_FUNCTION(Animal, arg) {
         	speed = 0;
         }
 
-//        if(get_angle() != )
-        left_motor_set_speed(ROTATION_COEFF * speed_correction); 
+
+        left_motor_set_speed(ROTATION_COEFF * speed_correction);
 		right_motor_set_speed(-ROTATION_COEFF * speed_correction);
 
      //    if(collision && f_mode == 1){

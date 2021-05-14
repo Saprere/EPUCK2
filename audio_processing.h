@@ -24,11 +24,10 @@ typedef enum {
 void processAudioData(int16_t *data, uint16_t num_samples);
 
 // returns the functionning mode corresponding to predefined working frequencies
-int8_t get_f_mode(void);
+int8_t get_mode(void);
 
 // initialiazes the file
 void audio_init(void);
-
 //return the current angle of the sound direction
 double get_angle(void);
 

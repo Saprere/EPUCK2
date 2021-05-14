@@ -27,7 +27,7 @@ WARNING : Not on the same port !!
 
 //constants for the differents parts of the project
 #define ROTATION_THRESHOLD		50
-#define ROTATION_COEFF			2
+#define ROTATION_COEFF			0.1
 #define GOAL_DISTANCE 			10.0f //REDEFINE DISTANCE GOAL
 #define MAX_DISTANCE 			25.0f //REDEFINE DISTANCE GOAL
 #define ERROR_THRESHOLD			0.1f	//MODIFY IF NOISE COMING FROM TOF
