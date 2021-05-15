@@ -43,7 +43,7 @@ static int8_t mode;
 #define MIN_VALUE_THRESHOLD	15000
 
 // angle en radian
-#define ANGLE_THRESHOLD 0.35
+#define ANGLE_THRESHOLD 1
 //cte de conversion
 #define ANGLE_CONVERT 2.85
 //cte de lissage exponentiel
