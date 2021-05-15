@@ -43,7 +43,7 @@ static int8_t mode;
 #define MIN_VALUE_THRESHOLD	15000
 
 // angle en radian
-#define ANGLE_THRESHOLD 0.35
+#define ANGLE_THRESHOLD 1
 //cte de conversion
 #define ANGLE_CONVERT 2.85
 //cte de lissage exponentiel
@@ -208,7 +208,7 @@ void processAudioData(int16_t *data, uint16_t num_samples){
 			angle_calculator(f_index);
 		}
 		else{
-
+			audio_angle_old = 0;
 			audio_angle = 0;
 		}
 	}

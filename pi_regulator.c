@@ -65,7 +65,7 @@ int16_t pi_regulator_angle(float distance, float goal){
         sum_error = -MAX_SUM_ERROR;
     }
 
-    speed = KP * error ;//+ KI * sum_error;
+    speed = KP * error + KI * sum_error;
 
     return (int16_t)speed;
 }
