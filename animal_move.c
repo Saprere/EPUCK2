@@ -53,7 +53,7 @@ static THD_FUNCTION(Animal, arg) {
         distance_TOF = VL53L0X_get_dist_mm();
 
         //computes the speed to give to the motors
-        speed = pi_regulator_distance((float)distance_TOF*CM, DIST_PLAY*CM);
+        //speed = pi_regulator_distance((float)distance_TOF*CM, DIST_PLAY*CM);
 
         //computes a correction factor to let the robot rotate to be aligned with the sound source
         speed_correction = pi_regulator_angle((float)get_angle(), 0); // regulation angle POUR LA CORRECTION
@@ -64,16 +64,10 @@ static THD_FUNCTION(Animal, arg) {
         if(abs(speed_correction) < ROTATION_THRESHOLD){
         	speed_correction = 0;
         }
-
-        if(distance_TOF < DIST_TRESHOLD_H && distance_TOF > DIST_TRESHOLD_L){
-        	speed = 0;
-        }
-
-
-     //    if(collision && f_mode == 1){
-    	// 	f_mode = 0;
-    	// 	obstacle = 1;
-    	// }
+//
+//        else{
+//        	speed = MOTOR_SPEED_CRUISE;
+//        }
 
         switch(f_mode){
 
@@ -81,22 +75,36 @@ static THD_FUNCTION(Animal, arg) {
 	        case 1:
 
 				if(distance_TOF >= DIST_PREY){
-					left_motor_set_speed(MOTOR_SPEED_CRUISE - ROTATION_COEFF * speed_correction); 
-					right_motor_set_speed(MOTOR_SPEED_CRUISE + ROTATION_COEFF * speed_correction);
+					right_motor_set_speed(MOTOR_SPEED_CRUISE - ROTATION_COEFF * speed_correction);
+					left_motor_set_speed(MOTOR_SPEED_CRUISE + ROTATION_COEFF * speed_correction);
+
 				}
 				
 				else{
-					left_motor_set_speed(MOTOR_SPEED_LIMIT);
 					right_motor_set_speed(MOTOR_SPEED_LIMIT);
+					left_motor_set_speed(MOTOR_SPEED_LIMIT);
 				}
 
 	        	break;
 
 			//The robot starts playing
 	        case 2:
-	        
-				right_motor_set_speed(speed - ROTATION_COEFF * speed_correction);
-				left_motor_set_speed(speed + ROTATION_COEFF * speed_correction);
+
+	        	if(distance_TOF >= DIST_TRESHOLD_L && distance_TOF <= DIST_TRESHOLD_H){
+	        		right_motor_set_speed(0);
+					left_motor_set_speed(0);
+				 }
+
+	        	else if(distance_TOF >= DIST_PLAY){
+	        		right_motor_set_speed(MOTOR_SPEED_CRUISE - ROTATION_COEFF * speed_correction);
+					left_motor_set_speed(MOTOR_SPEED_CRUISE + ROTATION_COEFF * speed_correction);
+
+				 }
+
+				 else if(distance_TOF <= DIST_PLAY){
+					 right_motor_set_speed(-MOTOR_SPEED_CRUISE - ROTATION_COEFF * speed_correction);
+					 left_motor_set_speed(-MOTOR_SPEED_CRUISE + ROTATION_COEFF * speed_correction);
+				 }
 
 	        	break;
 

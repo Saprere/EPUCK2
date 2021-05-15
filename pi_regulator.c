@@ -29,10 +29,10 @@ int16_t pi_regulator_distance(float distance, float goal){
 	sum_error += error;
 
 	//we set a maximum and a minimum for the sum to avoid an uncontrolled growth
-	if(sum_error > MAX_SUM_ERROR){
-		sum_error = MAX_SUM_ERROR;
-	}else if(sum_error < -MAX_SUM_ERROR){
-		sum_error = -MAX_SUM_ERROR;
+	if(sum_error > MAX_SUM_ERROR_DIST){
+		sum_error = MAX_SUM_ERROR_DIST;
+	}else if(sum_error < -MAX_SUM_ERROR_DIST){
+		sum_error = -MAX_SUM_ERROR_DIST;
 	}
 
 	speed = KP * error + KI * sum_error;
@@ -59,10 +59,10 @@ int16_t pi_regulator_angle(float distance, float goal){
     sum_error += error;
 
     //we set a maximum and a minimum for the sum to avoid an uncontrolled growth
-    if(sum_error > MAX_SUM_ERROR){
-        sum_error = MAX_SUM_ERROR;
-    }else if(sum_error < -MAX_SUM_ERROR){
-        sum_error = -MAX_SUM_ERROR;
+    if(sum_error > MAX_SUM_ERROR_ANGLE){
+        sum_error = MAX_SUM_ERROR_ANGLE;
+    }else if(sum_error < -MAX_SUM_ERROR_ANGLE){
+        sum_error = -MAX_SUM_ERROR_ANGLE;
     }
 
     speed = KP * error + KI * sum_error;
