@@ -212,7 +212,6 @@ void processAudioData(int16_t *data, uint16_t num_samples){
 			audio_angle = 0;
 		}
 	}
-	chprintf((BaseSequentialStream *)&SD3,"angle = %lf \n",audio_angle*(180/3.14) );
 }
 
 double get_angle(){

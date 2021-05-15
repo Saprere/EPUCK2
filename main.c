@@ -17,7 +17,6 @@
 #include <fft.h>
 #include <communications.h>
 #include <arm_math.h>
-#include <sensors/proximity.h>
 #include <sensors/VL53L0X/VL53L0X.h>
 
 
@@ -28,9 +27,6 @@
 #define DOUBLE_BUFFERING
 
 
-messagebus_t bus;
-MUTEX_DECL(bus_lock);
-CONDVAR_DECL(bus_condvar);
 
 
 void SendUint8ToComputer(uint8_t* data, uint16_t size) 
@@ -95,9 +91,7 @@ int main(void)
     //inits the motors
     motors_init();
     //initialise le bus pour le capteur de proximit�
-    messagebus_init(&bus, &bus_lock, &bus_condvar);
 
-    proximity_start();
 
     VL53L0X_start();
 

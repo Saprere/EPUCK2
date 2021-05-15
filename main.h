@@ -27,11 +27,11 @@ WARNING : Not on the same port !!
 
 //constants for the differents parts of the project
 #define ROTATION_THRESHOLD		50
-#define ROTATION_COEFF			0.1
+#define ROTATION_COEFF			1
 #define GOAL_DISTANCE 			10.0f //REDEFINE DISTANCE GOAL
 #define MAX_DISTANCE 			25.0f //REDEFINE DISTANCE GOAL
 #define ERROR_THRESHOLD			0.1f	//MODIFY IF NOISE COMING FROM TOF
-#define KP						80000.0f
+#define KP						80.0f
 #define KI 						3.5f	//must not be zero
 #define MAX_SUM_ERROR 			(MOTOR_SPEED_LIMIT/KI)
 #define MOTOR_SPEED_CRUISE		400
