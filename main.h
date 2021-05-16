@@ -21,6 +21,11 @@ extern "C" {
 #define DIST_TRESHOLD_H			(DIST_GOAL + DIST_TRESHOLD)
 #define DIST_TRESHOLD_L			(DIST_GOAL - DIST_TRESHOLD)
 
+#define LED_FRONT				0
+#define LED_RIGHT				2
+#define LED_LEFT				6
+#define LED_BACK				4 
+
 /** Robot wide IPC bus. */
 extern messagebus_t bus;
 

@@ -7,6 +7,7 @@
 #include <fft.h>
 #include <audio_processing.h>
 #include <sensors/VL53L0X/VL53L0X.h>
+#include <leds.h>
 
 int16_t pi_regulator_angle(float angle, float goal){
 
@@ -52,9 +53,13 @@ static THD_FUNCTION(Move, arg){
 
 	int8_t mode = 0;
 
-	double angle = 0; 
+	double angle = 0;
 
     while(1){
+
+ 		clear_leds();
+		set_front_led(0);
+		set_body_led(0);
 
         time = chVTGetSystemTime(); 
 
@@ -78,6 +83,8 @@ static THD_FUNCTION(Move, arg){
 	        //The robot moves towards the prey
 	        case 1:
 
+	        	set_front_led(1);
+
 				if(distance_TOF >= DIST_GOAL){
 					right_motor_set_speed(MOTOR_SPEED_CRUISE - ROTATION_COEFF * speed_correction);
 					left_motor_set_speed(MOTOR_SPEED_CRUISE + ROTATION_COEFF * speed_correction);
@@ -86,6 +93,10 @@ static THD_FUNCTION(Move, arg){
 				else{
 					right_motor_set_speed(MOTOR_SPEED_LIMIT);
 					left_motor_set_speed(MOTOR_SPEED_LIMIT);
+					set_led(LED_FRONT, 1);
+					set_led(LED_RIGHT, 1);
+					set_led(LED_LEFT, 1);
+					set_led(LED_BACK, 1);
 				}
 
 	        	break;
@@ -115,6 +126,7 @@ static THD_FUNCTION(Move, arg){
 	        case 3:
 
 	        	left_motor_set_speed(MOTOR_SPEED_LIMIT);
+	        	set_body_led(1);
 
 
 	        	break;
