@@ -4,7 +4,6 @@
 
 #include <ch.h>
 #include <hal.h>
-#include <chprintf.h>
 #include <memory_protection.h>
 #include <main.h>
 #include <motors.h>
@@ -14,8 +13,6 @@
 #include <fft.h>
 #include <arm_math.h>
 #include <sensors/VL53L0X/VL53L0X.h>
-
-#define SEND_FROM_MIC
 
 static void serial_start(void)
 {
@@ -36,27 +33,17 @@ int main(void)
     halInit();
     chSysInit();
     mpu_init();
-
     //starts the serial communication
     serial_start();
-
     //inits the motors
     motors_init();
-
     //starts the TOF 
     VL53L0X_start();
-
     //initialise the audio angle 
     audio_init();
-
     //stars the threads for the animal move regulator
     move_start();
-
-#ifdef SEND_FROM_MIC
-    //starts the microphones processing thread.
-    //it calls the callback given in parameter when samples are ready
     mic_start(&processAudioData);
-#endif  /* SEND_FROM_MIC */
 
     /* Infinite loop. */
     while (1) {

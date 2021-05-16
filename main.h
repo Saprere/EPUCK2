@@ -21,22 +21,6 @@ extern "C" {
 #define DIST_TRESHOLD_H			(DIST_GOAL + DIST_TRESHOLD)
 #define DIST_TRESHOLD_L			(DIST_GOAL - DIST_TRESHOLD)
 
-/* LEDs that can be used in EPUCK2
-  LED1 			: GPIOD pin 5
-  LED3 			: GPIOD pin 6
-  LED5 			: GPIOD pin 10
-  LED7 			: GPIOD pin 11
-  FRONT_LED 	: GPIOD pin 14
-WARNING : Not on the same port !!
-  BODY_LED		: GPIOB pin 2
-*/
-//#define LED1     	GPIOD, 5
-//#define LED3     	GPIOD, 6
-//#define LED5     	GPIOD, 10
-//#define LED7     	GPIOD, 11
-//#define FRONT_LED	GPIOD, 14
-//#define BODY_LED	GPIOB, 2
-
 /** Robot wide IPC bus. */
 extern messagebus_t bus;
 

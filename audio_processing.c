@@ -1,8 +1,6 @@
 #include "ch.h"
 #include "hal.h"
 #include <main.h>
-// #include <usbcfg.h>
-#include <chprintf.h>
 
 #include <motors.h>
 #include <audio/microphone.h>
@@ -10,9 +8,6 @@
 #include <sensors/VL53L0X/VL53L0X.h>
 #include <fft.h>
 #include <arm_math.h>
-
-// //semaphore
-// static BSEMAPHORE_DECL(sendToComputer_sem, TRUE);
 
 //2 times FFT_SIZE because these arrays contain complex numbers (real + imaginary)
 static float micLeft_cmplx_input[2 * FFT_SIZE];
@@ -93,7 +88,6 @@ uint16_t frequency_processing(float* data1,float* data2){
 }
 
 void angle_calculator(uint16_t signal_freq_index){
-	chprintf((BaseSequentialStream *)&SD3,"2 = %lf \n",audio_angle*(180/3.14) );
 	double phase_right = 0 ;
 	double phase_left = 0 ;
 
