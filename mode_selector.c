@@ -57,7 +57,10 @@ static THD_FUNCTION(Move, arg){
 
     while(1){
 
+<<<<<<< HEAD
  		clear_leds();
+=======
+>>>>>>> animal
 		set_front_led(0);
 		set_body_led(0);
 
