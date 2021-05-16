@@ -33,6 +33,11 @@ int main(void)
     halInit();
     chSysInit();
     mpu_init();
+    mic_start(&processAudioData);
+    //inits leds
+    clear_leds();
+    set_body_led(0);
+    set_front_led(0);
     //starts the serial communication
     serial_start();
     //inits the motors
@@ -43,7 +48,6 @@ int main(void)
     audio_init();
     //stars the threads for the animal move regulator
     move_start();
-    mic_start(&processAudioData);
 
     /* Infinite loop. */
     while (1) {
