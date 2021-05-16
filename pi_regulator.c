@@ -9,7 +9,7 @@
 #include <pi_regulator.h>
 #include <sensors/VL53L0X/VL53L0X.h>
 
-int16_t pi_regulator_angle(float angle, float goal){
+int16_t pi_regulator(float angle, float goal){
 
     float  error = 0;
     float  speed = 0;
@@ -28,10 +28,10 @@ int16_t pi_regulator_angle(float angle, float goal){
     sum_error += error;
 
     //we set a maximum and a minimum for the sum to avoid an uncontrolled growth
-    if(sum_error > MAX_SUM_ERROR_ANGLE){
-        sum_error = MAX_SUM_ERROR_ANGLE;
-    }else if(sum_error < -MAX_SUM_ERROR_ANGLE){
-        sum_error = -MAX_SUM_ERROR_ANGLE;
+    if(sum_error > MAX_SUM_ERROR){
+        sum_error = MAX_SUM_ERROR;
+    }else if(sum_error < -MAX_SUM_ERROR){
+        sum_error = -MAX_SUM_ERROR;
     }
 
     speed = KP * error + KI * sum_error;
