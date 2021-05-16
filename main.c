@@ -6,7 +6,6 @@
 #include <hal.h>
 #include <chprintf.h>
 #include <memory_protection.h>
-#include <usbcfg.h>
 #include <main.h>
 #include <motors.h>
 #include <audio/microphone.h>

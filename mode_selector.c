@@ -1,14 +1,12 @@
 #include "ch.h"
 #include "hal.h"
 #include <main.h>
-#include <usbcfg.h>
 #include <chprintf.h>
 #include <arm_math.h>
 
 #include <motors.h>
 #include <fft.h>
 #include <audio_processing.h>
-// #include <pi_regulator.h>
 #include <sensors/VL53L0X/VL53L0X.h>
 
 int16_t pi_regulator_angle(float angle, float goal){
