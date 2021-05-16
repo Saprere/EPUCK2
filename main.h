@@ -9,7 +9,7 @@ extern "C" {
 #include "parameter/parameter.h"
 
 #define ROTATION_THRESHOLD		50
-#define ROTATION_COEFF			0.7f
+#define ROTATION_COEFF			2.0f
 #define	GOAL_ANGLE				0.0f
 #define ERROR_THRESHOLD			0.1f	//MODIFY IF NOISE COMING FROM TOF
 #define KP						160.0f
