@@ -60,7 +60,6 @@ static int8_t mode;
 
 //PRIVATE FUNCTIONS =======================================================
 
-
 uint16_t frequency_processing(float* data1,float* data2){
 
 	//permet de respecter la dernière condition
@@ -132,27 +131,23 @@ uint8_t mode_selector(uint16_t f){
 
 //PUBLIC FUNCTIONS ========================
 
-void wait_send_to_computer(void){
-	chBSemWait(&sendToComputer_sem);
-}
-
-float* get_audio_buffer_ptr(BUFFER_NAME_t name){
-	if(name == LEFT_CMPLX_INPUT){
-		return micLeft_cmplx_input;
-	}
-	else if (name == RIGHT_CMPLX_INPUT){
-		return micRight_cmplx_input;
-	}
-	else if (name == LEFT_OUTPUT){
-		return micLeft_output;
-	}
-	else if (name == RIGHT_OUTPUT){
-		return micRight_output;
-	}
-	else{
-		return NULL;
-	}
-}
+// float* get_audio_buffer_ptr(BUFFER_NAME_t name){
+// 	if(name == LEFT_CMPLX_INPUT){
+// 		return micLeft_cmplx_input;
+// 	}
+// 	else if (name == RIGHT_CMPLX_INPUT){
+// 		return micRight_cmplx_input;
+// 	}
+// 	else if (name == LEFT_OUTPUT){
+// 		return micLeft_output;
+// 	}
+// 	else if (name == RIGHT_OUTPUT){
+// 		return micRight_output;
+// 	}
+// 	else{
+// 		return NULL;
+// 	}
+// }
 
 void audio_init(void){
 	audio_angle_old = 0;
@@ -220,5 +215,3 @@ double get_angle(){
 int8_t get_mode(){
 	return mode;
 }
-
-

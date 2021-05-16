@@ -18,8 +18,6 @@ typedef enum {
 	BACK_OUTPUT
 } BUFFER_NAME_t;
 
-
-
 //gets the signal, does FFT, calculate the amplitude of FFT, calls the other functions
 void processAudioData(int16_t *data, uint16_t num_samples);
 
@@ -30,10 +28,5 @@ int8_t get_mode(void);
 void audio_init(void);
 //return the current angle of the sound direction
 double get_angle(void);
-
-void wait_send_to_computer(void);
-
-float* get_audio_buffer_ptr(BUFFER_NAME_t name);
-
 
 #endif /* AUDIO_PROCESSING_H */
