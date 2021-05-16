@@ -40,8 +40,6 @@ WARNING : Not on the same port !!
 #define DIST_TRESHOLD_H			(DIST_PLAY + DIST_TRESHOLD)
 #define DIST_TRESHOLD_L			(DIST_PLAY - DIST_TRESHOLD)
 
-#define CM						(10^-1)
-
 /** Robot wide IPC bus. */
 extern messagebus_t bus;
 
