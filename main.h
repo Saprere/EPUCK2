@@ -8,6 +8,18 @@ extern "C" {
 #include "msgbus/messagebus.h"
 #include "parameter/parameter.h"
 
+#define ROTATION_THRESHOLD		50
+#define ROTATION_COEFF			0.7f
+#define	GOAL_ANGLE				0.0f
+#define ERROR_THRESHOLD			0.1f	//MODIFY IF NOISE COMING FROM TOF
+#define KP						160.0f
+#define KI 						0.05f	//must not be zero
+#define MAX_SUM_ERROR			(MOTOR_SPEED_LIMIT/10)
+#define MOTOR_SPEED_CRUISE		500
+#define DIST_GOAL				200
+#define DIST_TRESHOLD			20
+#define DIST_TRESHOLD_H			(DIST_GOAL + DIST_TRESHOLD)
+#define DIST_TRESHOLD_L			(DIST_GOAL - DIST_TRESHOLD)
 
 /* LEDs that can be used in EPUCK2
   LED1 			: GPIOD pin 5
@@ -24,20 +36,6 @@ WARNING : Not on the same port !!
 //#define LED7     	GPIOD, 11
 //#define FRONT_LED	GPIOD, 14
 //#define BODY_LED	GPIOB, 2
-
-//constants for the differents parts of the project
-#define ROTATION_THRESHOLD		50
-#define ROTATION_COEFF			0.7f
-#define	GOAL_ANGLE				0.0f
-#define ERROR_THRESHOLD			0.1f	//MODIFY IF NOISE COMING FROM TOF
-#define KP						160.0f
-#define KI 						0.05f	//must not be zero
-#define MAX_SUM_ERROR			(MOTOR_SPEED_LIMIT/10)
-#define MOTOR_SPEED_CRUISE		500
-#define DIST_GOAL				200
-#define DIST_TRESHOLD			20
-#define DIST_TRESHOLD_H			(DIST_GOAL + DIST_TRESHOLD)
-#define DIST_TRESHOLD_L			(DIST_GOAL - DIST_TRESHOLD)
 
 /** Robot wide IPC bus. */
 extern messagebus_t bus;

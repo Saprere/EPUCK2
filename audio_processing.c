@@ -7,12 +7,9 @@
 #include <motors.h>
 #include <audio/microphone.h>
 #include <audio_processing.h>
-#include <pi_regulator.h>
 #include <sensors/VL53L0X/VL53L0X.h>
 #include <fft.h>
 #include <arm_math.h>
-
-
 
 //semaphore
 static BSEMAPHORE_DECL(sendToComputer_sem, TRUE);
@@ -30,7 +27,6 @@ static float audio_angle_old;
 static int8_t mode;
 
 #define MIN_FREQ		10	//we don't analyze before this index to not use resources for nothing
-
 // CASE 1
 #define FREQ_PREY		16	//frequence at witch the robot hunts
 //CASE 2
@@ -62,7 +58,7 @@ static int8_t mode;
 
 uint16_t frequency_processing(float* data1,float* data2){
 
-	//permet de respecter la dernière condition
+	//permet de respecter la derniï¿½re condition
 	float max_norm1 = MIN_VALUE_THRESHOLD ;
 	float max_norm2 = MIN_VALUE_THRESHOLD ;
 
@@ -95,7 +91,6 @@ uint16_t frequency_processing(float* data1,float* data2){
 	}
 
 }
-
 
 void angle_calculator(uint16_t signal_freq_index){
 	chprintf((BaseSequentialStream *)&SD3,"2 = %lf \n",audio_angle*(180/3.14) );
@@ -131,23 +126,6 @@ uint8_t mode_selector(uint16_t f){
 
 //PUBLIC FUNCTIONS ========================
 
-// float* get_audio_buffer_ptr(BUFFER_NAME_t name){
-// 	if(name == LEFT_CMPLX_INPUT){
-// 		return micLeft_cmplx_input;
-// 	}
-// 	else if (name == RIGHT_CMPLX_INPUT){
-// 		return micRight_cmplx_input;
-// 	}
-// 	else if (name == LEFT_OUTPUT){
-// 		return micLeft_output;
-// 	}
-// 	else if (name == RIGHT_OUTPUT){
-// 		return micRight_output;
-// 	}
-// 	else{
-// 		return NULL;
-// 	}
-// }
 
 void audio_init(void){
 	audio_angle_old = 0;

@@ -4,14 +4,15 @@
 #include <usbcfg.h>
 #include <chprintf.h>
 
-#include <main.h>
 #include <motors.h>
 #include <pi_regulator.h>
-#include <sensors/VL53L0X/VL53L0X.h>
 
-int16_t pi_regulator(float angle, float goal){
+        // ./pi_regulator.c \
+
+int16_t pi_regulator_angle(float angle, float goal){
 
     float  error = 0;
+
     float  speed = 0;
 
     static float sum_error = 0;
@@ -20,7 +21,6 @@ int16_t pi_regulator(float angle, float goal){
 
     //disables the PI regulator if the error is to small
     //this avoids to always move as we cannot exactly be where we want and 
-    //the camera is a bit noisy
     if(fabs(error) < ERROR_THRESHOLD/10){
         return 0;
     }
@@ -38,3 +38,4 @@ int16_t pi_regulator(float angle, float goal){
 
     return (int16_t)speed;
 }
+

@@ -11,8 +11,7 @@
 #include <motors.h>
 #include <audio/microphone.h>
 #include <audio_processing.h>
-#include <pi_regulator.h>
-#include <animal_move.h>
+#include <mode_selector.h>
 #include <fft.h>
 #include <arm_math.h>
 #include <sensors/VL53L0X/VL53L0X.h>
@@ -52,7 +51,7 @@ int main(void)
     audio_init();
 
     //stars the threads for the animal move regulator
-    animal_start();
+    move_start();
 
 #ifdef SEND_FROM_MIC
     //starts the microphones processing thread.
